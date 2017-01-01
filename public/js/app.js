@@ -1,1 +1,1 @@
-angular.module('prototypeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'ViewCtrl', 'NodeCtrl', 'NodeService', 'ViewService']);
+angular.module('prototypeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'ViewCtrl','ViewDetailCtrl', 'ViewCreationCtrl', 'NodeCtrl',  'NodeService', 'ViewService']);

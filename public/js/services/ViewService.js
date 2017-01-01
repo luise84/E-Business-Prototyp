@@ -8,7 +8,7 @@ angular.module('ViewService', []).factory('ViewFactory', ['$http', function($htt
         };
 
         view.getOne = function(id) {
-            return $http.get(baseurl+ id);
+            return $http.get(baseurl+"/"+  id);
         };
 
 
@@ -18,14 +18,15 @@ angular.module('ViewService', []).factory('ViewFactory', ['$http', function($htt
             return $http.post(baseurl, viewData);
         };
 
-        view.update = function(id){
-            return $http.put(baseurl + id);
+        view.update = function(id, viewData){
+            return $http.put(baseurl +"/"+ id, viewData);
         };
 
         // call to DELETE a nerd
         view.delete = function(id) {
-            return $http.delete(baseurl + id);
+            return $http.delete(baseurl +"/"+  id);
         };
+
        return view;    
 
 }]);

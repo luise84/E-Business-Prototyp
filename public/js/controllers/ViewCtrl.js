@@ -5,7 +5,7 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
     $scope.status;
     $scope.views;
 
-    getViews();
+    $scope.views = getViews();
 
     function getViews(){
     	view.getAll().then(function (res){
@@ -16,7 +16,7 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
     }
 
     $scope.updateView = function(id) {
-    	var _view;
+    	/*var _view;
     	for (var i=0; i< $scope.views.length; i++){
     		var currView = $scope.views[i];
     		if(currView.id === id){
@@ -29,19 +29,10 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
 
     	}, function(error){
     		$scope.status = 'Unable to update view: ' + error.message;
-    	});
+    	});*/
     	$location.path('/view-detail/'+id);
     }
-     $scope.createView = function (viewData) {
-        //Fake view data
-        var _view = viewData;
-        view.create(_view)
-            .then(function (response) {
-                $scope.status = 'Inserted View! Refreshing customer list.';
-                $scope.views.push(_view);
-            }, function(error) {
-                $scope.status = 'Unable to insert customer: ' + error.message;
-            });
+     $scope.createView = function () {
         $location.path('/view-creation');
     };
 

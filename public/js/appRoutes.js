@@ -18,15 +18,17 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             templateUrl: 'views/node.html',
             controller: 'NodeController'
         })
-        .when('/view-detail', {
-            templateUrl: 'views/view-detail.html',
-            controller: 'ViewController'
-        })
+        
         .when('/view-creation', {
             templateUrl: 'views/view-creation.html',
-            controller: 'ViewController'
+            controller: 'ViewCreationController'
+        })
+        .when('/view-detail/:id', {
+            templateUrl: 'views/view-detail.html',
+            controller: 'ViewDetailController'
         })
 
+        .otherwise({redirectTo: '/views'});
     $locationProvider.html5Mode(true);
 
 }]);
