@@ -1,0 +1,27 @@
+.page        {
+    bottom:0; 
+    padding-top:200px;
+    position:absolute; 
+    text-align:center;
+    top:0;  
+    width:100%; 
+}
+
+.page h1    { font-size:60px; }
+.page a     { margin-top:50px; }
+
+h3 .apptitle{
+	margin-top: 10px !important;
+}
+
+/* PAGES (specific colors for each page)
+============================================================================= */
+.page-home      { background:#00D0BC; color:#00907c; }
+.page-node     { background:#E59400; color:#a55400; }
+/* home -------------------------- */
+.page-home.ng-enter         { animation: scaleUp 0.5s both ease-in; }
+.page-home.ng-leave         { transform-origin: 0% 0%; animation: rotateFall 1s both ease-in; }
+
+/* node ------------------------ */
+.page-node.ng-enter        { animation:slideInRight 0.5s both ease-in; }
+.page-node.ng-leave        { animation:slideOutLeft 0.5s both ease-in; }

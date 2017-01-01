@@ -1,0 +1,16 @@
+<div class="jumbotron text-center">
+    <h1>Ansichten</h1>
+    <div class="col-md-12">
+    	<div class="row" ng-repeat="view in views">
+    		<div class="col-md-2 subpanel panel-default">{{view.name}}</div>
+    		<div class="col-md-8">
+                
+                <div class="btn btn-small btn-primary" ng-click="updateView(view._id)">bearbeiten</div>
+                <div class="btn btn-small btn-danger" ng-click="deleteView(view._id)">löschen</div>
+    			
+    		</div>
+    	</div>
+        <div class="btn btn-small btn-primary" ng-click="createView()">erstellen</div>
+    </div>
+
+</div>

@@ -1,0 +1,1 @@
+angular.module('prototypeApp', ['ngRoute', 'appRoutes', 'MainCtrl', 'ViewCtrl', 'NodeCtrl', 'NodeService', 'ViewService']);
