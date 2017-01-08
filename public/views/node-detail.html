@@ -1,0 +1,33 @@
+<div class="container">
+    <h1>Details des Knoten</h1>
+
+    <form novalidate="novalidate" class="form-horizontal">
+        
+        <div class="control-group">
+            <label class="control-label" for="inputName">Name:</label>{{currentNode.name}}
+            <div class="controls">
+                <input type="text" id="inputName" ng-model="node.name"/>
+            </div>
+        </div>
+        
+        <div class="control-group">
+            <label class="control-label" for="inputContent">Inhalt:</label>{{currentNode.content}}
+            <div class="controls">
+                <input type="text" id="inputContent" ng-model="node.content"/>
+            </div>
+        </div>
+         <div class="control-group">
+            <label class="control-label" for="inputKeywords">Keywords:</label>{{currentNode.keywords}}
+            <div class="controls">
+                <input type="text" id="inputKeyword" ng-model="node.keywords"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+
+                <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
+                <a ng-click="updateNode(node.name, node.content, node.keywords)" class="btn btn-small btn-primary">Knoten bearbeiten</a>
+            </div>
+        </div>
+    </form>
+</div>

@@ -14,10 +14,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             controller: 'ViewController'
         })
 
-        .when('/nodes', {
-            templateUrl: 'views/node.html',
-            controller: 'NodeController'
-        })
+       
         
         .when('/view-creation', {
             templateUrl: 'views/view-creation.html',
@@ -27,8 +24,24 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             templateUrl: 'views/view-detail.html',
             controller: 'ViewDetailController'
         })
-
         .otherwise({redirectTo: '/views'});
+
+    $routeProvider
+
+         .when('/nodes', {
+            templateUrl: 'views/node.html',
+            controller: 'NodeController'
+        })
+         .when('/node-creation', {
+            templateUrl: 'views/node-creation.html',
+            controller: 'NodeCreationController'
+         })
+         .when('/node-detail/:id', {
+            templateUrl: 'views/node-detail.html',
+            controller: 'NodeDetailController'
+         })
+
+        .otherwise({redirectTo: '/nodes'});
     $locationProvider.html5Mode(true);
 
 }]);

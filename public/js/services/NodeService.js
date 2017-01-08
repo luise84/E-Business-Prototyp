@@ -1,4 +1,4 @@
-angular.module('NodeService', []).factory('Node', ['$http', function($http) {
+angular.module('NodeService', []).factory('NodeFactory', ['$http', function($http) {
 
     var baseurl = '/api/nodes';
     var node =  {};
@@ -8,7 +8,7 @@ angular.module('NodeService', []).factory('Node', ['$http', function($http) {
             return $http.get(baseurl);
         };
         node.getOne = function(id) {
-            return $http.get(baseurl+  id);
+            return $http.get(baseurl+"/"+  id);
         };
 
 
@@ -19,12 +19,12 @@ angular.module('NodeService', []).factory('Node', ['$http', function($http) {
         };
 
         node.update = function(id){
-            return $http.put(baseurl + id);
+            return $http.put(baseurl +"/"+ id);
         };
 
         // call to DELETE a nerd
         node.delete = function(id) {
-            return $http.delete(baseurl + id);
+            return $http.delete(baseurl +"/"+ id);
         };
         return node;
 

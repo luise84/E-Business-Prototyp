@@ -1,13 +1,16 @@
 <div class="jumbotron text-center">
-    <h1>Nodes</h1>
+    <h1>Knoten der Ansicht</h1>
     <div class="col-md-12">
-    	<div class="row">
-    		<div class="col-md-4 subpanel panel-default">Ansicht 1</div>
-    		<div class="col-md-8">
-    			<button type="button" class="btn btn-default grau  active clickable" data-tooltip="tooltip" title="" data-original-title="Anklickbar">Anzeigen</button>
-    			<button type="button" class="btn btn-default grau  active clickable" data-tooltip="tooltip" title="" data-original-title="Anklickbar">Bearbeiten</button>
-    		</div>
-    	</div>
+        <div class="row" ng-repeat="node in nodes">
+            <div class="col-md-2 subpanel panel-default">{{node.name}}</div>
+            <div class="col-md-8">
+                <div class="btn btn-small btn-primary" ng-click="showNode(node._id)">Details anzeigen</div>
+                <div class="btn btn-small btn-primary" ng-click="updateNode(node._id)">bearbeiten</div>
+                <div class="btn btn-small btn-danger" ng-click="deleteNode(node._id)">löschen</div>
+                
+            </div>
+        </div>
+        <div class="btn btn-small btn-primary" ng-click="createNode()">erstellen</div>
     </div>
 
 </div>

@@ -100,6 +100,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
             // use mongoose to get all nerds in the database
             var query = {};
             if(req.query.name) query.name = new RegExp(req.query.name, 'i'); //i->case-insensitive
+            if(req.query.view) query.view = new RegExp(req.query.view, 'i');
             if(req.query.content) query.content = new RegExp(req.query.content, 'i');
             if(req.query.keywords) query.keywords = new RegExp(req.query.keywords, 'i');
 
@@ -135,6 +136,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 			var node = new Node();						
 		
 			node.name = req.body.name ;
+            node.view = req.body.view;
 			node.content = req.body.content;
 			node.keywords =  req.body.keywords || [];
 
@@ -166,6 +168,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         			if(req.body === undefined) res.status(400).json(error00);
         			else{
                         if(req.body.name !== undefined) node.name = req.body.name;
+                        if(req.body.view != undefined) node.view = req.body.view;
                         if(req.body.content !== undefined) node.content = req.body.content;
                         if(req.body.keywords !== undefined) node.keywords = req.body.keywords;
                         

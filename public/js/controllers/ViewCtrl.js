@@ -16,20 +16,6 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
     }
 
     $scope.updateView = function(id) {
-    	/*var _view;
-    	for (var i=0; i< $scope.views.length; i++){
-    		var currView = $scope.views[i];
-    		if(currView.id === id){
-    			_view = currView;
-    			break;
-    		}
-    	}
-    	view.update(_view).then(function(res){
-    		$scope.status = "Updated View! Refreshing view list.";
-
-    	}, function(error){
-    		$scope.status = 'Unable to update view: ' + error.message;
-    	});*/
     	$location.path('/view-detail/'+id);
     }
      $scope.createView = function () {
@@ -53,6 +39,10 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
         });
 
     };
+    $scope.showView = function(id){
+        $location.path('/nodes');
+
+    }
 
 
 
