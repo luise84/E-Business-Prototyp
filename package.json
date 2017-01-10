@@ -6,7 +6,8 @@
         "mongoose" : "~3.8.0",
         "body-parser" : "~1.4.2",
         "method-override" : "~2.0.2",
-        "visjs":    "~4.17.0",
-        "angular": "~1.6.0"
+        "vis":    "~4.17.0",
+        "angular": "~1.6.0",
+       "angular-visjs":"~4.16.0"
       }
     }

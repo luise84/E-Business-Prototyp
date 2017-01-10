@@ -13,6 +13,10 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             templateUrl: 'views/view.html',
             controller: 'ViewController'
         })
+        .when('/views/:id', {
+            templateUrl: 'views/view-node.html',
+            controller: 'VisController'
+        })
 
        
         
@@ -39,6 +43,10 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
          .when('/node-detail/:id', {
             templateUrl: 'views/node-detail.html',
             controller: 'NodeDetailController'
+         })
+         .when('/view-node', {
+            templateUrl: 'views/view-node.html',
+            controller: 'VisController'
          })
 
         .otherwise({redirectTo: '/nodes'});

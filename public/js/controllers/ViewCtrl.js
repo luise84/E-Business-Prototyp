@@ -40,8 +40,9 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
 
     };
     $scope.showView = function(id){
-        $location.path('/nodes');
-
+       // $location.path('/nodes');
+       //$location.path('/view-node');
+       $location.path('/views/'+ id);
     }
 
 

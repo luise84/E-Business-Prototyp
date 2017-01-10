@@ -42,6 +42,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
     };
     $scope.showNode = function(id){
         $location.path('/node-detail/'+id);
+       //$location.path('/view-node');
 
     }
 

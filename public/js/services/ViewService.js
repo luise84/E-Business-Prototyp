@@ -1,3 +1,5 @@
+
+
 angular.module('ViewService', []).factory('ViewFactory', ['$http', function($http) {
 
     var baseurl = '/api/views';
