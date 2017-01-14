@@ -8,6 +8,6 @@ var nodeSchema = mongoose.Schema({
 	content: String,
 	visible: Boolean,
 	childNodes: [{type: mongoose.Schema.ObjectId, ref: 'Node'}],
-	parent: String
+	parent: {type: mongoose.Schema.ObjectId, ref: 'Node'}
 });
 module.exports = mongoose.model('Node', nodeSchema);

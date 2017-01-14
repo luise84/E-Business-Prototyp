@@ -13,7 +13,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         // authentication routes
         /*-------------------------------Views--------------------------------------*/
         app.get('/api/views', function(req, res){
-            Node.find({"parent": "/"}).exec((err, nodes) => {
+            Node.find({"parent": null}).exec((err, nodes) => {
                 if (err) res.send(err);
                 
                 res.setHeader("content-type", "application/json");
@@ -30,7 +30,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
           else{
             var node = createNode({
                 name: req.body.name,
-                parent: {name: "", parent: ""}
+                parent: undefined
             });
            
             node.save(function(error){
@@ -68,7 +68,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         });
         app.delete('/api/views/:view_id', function(req, res){
             // Gleiches, wie beim "Löschen" einer Node, da Views == Nodes.
-            Node.findOne({"name": req.params.view_id, "parent": "/"}, function(error, node){
+            Node.findOne({"name": req.params.view_id}, function(error, node){
                 if(error) res.status(404).json(error04);
                 else if(node == null) res.status(404).json(error04);
                 else {
@@ -120,27 +120,30 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
     			res.setHeader("content-type", "application/json");
     			res.status(400).json(error00);
 			
-            }
+        }
             else{
-                var node = createNode(req.body);
+                var node;
+                Node.findOne({"name": req.body.parent.name }).exec((error, element) => {
+                    // Anlegen der Node in den RAM:
+                    node = createNode(req.body);
+                    node.parent = element._id;
 
-                node.save(err => {
-                    if (err) {
-                        console.warn(err);
+                    if (element.length === 0 || error) {
+                        console.warn(error);
                         return;
                     }
-
-                    Node.find({"name": req.body.parent.name }).exec((error, element) => {
-                        if (element.length === 0 || error) {
-                            console.warn(error);
+                    if (element.childNodes === undefined) {
+                        element.childNodes = [node._id];
+                    } else {
+                        element.childNodes.push(node._id);
+                    }
+                    // Erst die Node speichern.
+                    node.save(err => {
+                        if (err) {
+                            console.warn(err);
                             return;
                         }
-                        element = element[0];
-                        if (element.childNodes === undefined) {
-                            element.childNodes = [node._id];
-                        } else {
-                            element.childNodes.push(node._id);
-                        }
+                        // Dann den Parent aktualisieren.
                         element.save(error => {
                             console.error(error);
                             if (!error) {
@@ -149,7 +152,6 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                         });
                     });
                 });
-
                 res.setHeader("content-type", "application/json");
                 res.status(201).json(node);
             }
@@ -158,7 +160,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         function createNode(nodeObject) {
             var node = new Node();
             node.name = nodeObject.name ;
-            node.parent = (nodeObject.parent.parent === "/" ? "/" : (node.parent.parent + "/")) + nodeObject.parent.name;
+            node.parent = nodeObject.parent === undefined ? null : nodeObject.parent._id;
             node.content = nodeObject.content || "";
             node.childNodes = [];
             node.visible = true;
@@ -181,7 +183,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                 if(error) res.status(404).json(error04);
                 else if(node == null) res.status(404).json(error04);
                 else {
-                    Node.find({"parent": (node.parent === "/" ? "/" : (node.parent + "/")) + node.name}, (error, childNodes) =>{
+                    Node.find({"parent": node._id}, (error, childNodes) =>{
                         res.setHeader("content-type", "application/json");
                         res.status(200).json(childNodes);
                     });
@@ -197,9 +199,9 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         			if(req.body === undefined) res.status(400).json(error00);
         			else{
                         if(req.body.name !== undefined) node.name = req.body.name;
-                        if(req.body.view != undefined) node.view = req.body.view;
+                        if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
-                        if(req.body.keywords !== undefined) node.keywords = req.body.keywords;
+                        if(req.body.childNodes !== undefined) node.childNodes = req.body.childNodes;
                         
                         node.save(function(error){
                             if(error) res.send(error);
