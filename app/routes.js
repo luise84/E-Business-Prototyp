@@ -13,52 +13,32 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         // authentication routes
         /*-------------------------------Views--------------------------------------*/
         app.get('/api/views', function(req, res){
-            // use mongoose to get all nerds in the database
-            var query = {};
-            if(req.query.name) query.name = new RegExp(req.query.name, 'i'); //i->case-insensitive
-            if(req.query.nodes) query.nodes = new RegExp(req.query.nodes, 'i');
-            
-            if(query.length != 0){
-                View.find(query).exec(function(err, views) {
+            Node.find({"parent": "/"}).exec((err, nodes) => {
                 if (err) res.send(err);
-                res.status(200).json(views);
+                
+                res.setHeader("content-type", "application/json");
+                res.status(200).json(nodes);
             });
-            }
-
-            else{
-                View.find(function(err, views) {
-
-                // if there is an error retrieving, send the error. 
-                                // nothing after res.send(err) will execute
-                    if (err)
-                        res.send(err);
-                    res.setHeader("content-type", "application/json");
-                    res.status(200).json(views); // return all nerds in JSON format
-                });
-            }
-
         });
         app.post('/api/views', function(req, res){
-            if(req.body.name === undefined || req.body.nodes === undefined){  
+            if(req.body.name === undefined){  
                     
                 res.setHeader("content-type", "application/json");
                 res.status(400).json(error00);
             
               }
           else{
-            var view = new View();                      
-        
-            view.name = req.body.name ;
-            view.nodes = req.body.nodes || [];
+            var node = createNode({
+                name: req.body.name,
+                parent: {name: "", parent: ""}
+            });
            
-            view.save(function(error){
+            node.save(function(error){
                 if(error) res.send(error00);
                 res.setHeader("content-type", "application/json");
-                res.status(201).json(view);
+                res.status(201).json(node);
             });
-        }
-
-        });
+        }});
         app.get('/api/views/:view_id', function(req, res){
             View.findById(req.params.view_id, function(error, view){
                 if(error) res.status(404).json(error04);
@@ -87,9 +67,18 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
             });
         });
         app.delete('/api/views/:view_id', function(req, res){
-            View.remove({_id: req.params.view_id}, function(error, view){
-                if(error) res.status(4040).json(error04);
-                res.status(204).json({message:"Deleted"});
+            // Gleiches, wie beim "Löschen" einer Node, da Views == Nodes.
+            Node.findOne({"name": req.params.view_id, "parent": "/"}, function(error, node){
+                if(error) res.status(404).json(error04);
+                else if(node == null) res.status(404).json(error04);
+                else {
+                    node.visible = false;
+
+                    node.save(function(error){
+                        if(error) res.send(error);
+                        res.status(200).json(node);
+                    });
+                }
             });
         });
 
@@ -126,31 +115,58 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 
         // route to handle creating goes here (app.post)
         app.post('/api/nodes', function(req, res){
-        	if(req.body.name === undefined || req.body.content === undefined){	
+        	if(req.body.name === undefined){	
 					
     			res.setHeader("content-type", "application/json");
     			res.status(400).json(error00);
 			
-		      }
-		  else{
-			var node = new Node();						
-		
-			node.name = req.body.name ;
-            node.view = req.body.view;
-			node.content = req.body.content;
-			node.keywords =  req.body.keywords || [];
+            }
+            else{
+                var node = createNode(req.body);
 
-			node.save(function(error){
-				if(error) res.send(error00);
-				res.setHeader("content-type", "application/json");
-				res.status(201).json(node);
-			});
-		}
-        	
-        });
+                node.save(err => {
+                    if (err) {
+                        console.warn(err);
+                        return;
+                    }
+
+                    Node.find({"name": req.body.parent.name }).exec((error, element) => {
+                        if (element.length === 0 || error) {
+                            console.warn(error);
+                            return;
+                        }
+                        element = element[0];
+                        if (element.childNodes === undefined) {
+                            element.childNodes = [node._id];
+                        } else {
+                            element.childNodes.push(node._id);
+                        }
+                        element.save(error => {
+                            console.error(error);
+                            if (!error) {
+                                return;
+                            }
+                        });
+                    });
+                });
+
+                res.setHeader("content-type", "application/json");
+                res.status(201).json(node);
+            }
+		});
+
+        function createNode(nodeObject) {
+            var node = new Node();
+            node.name = nodeObject.name ;
+            node.parent = (nodeObject.parent.parent === "/" ? "/" : (node.parent.parent + "/")) + nodeObject.parent.name;
+            node.content = nodeObject.content || "";
+            node.childNodes = [];
+            node.visible = true;
+            return node;
+        }
         // route to handle finding goes here (app.get)
         app.get('/api/nodes/:node_id',function(req, res){
-        	Node.findById(req.params.node_id, function(error, node){
+        	Node.find({"name": req.params.node_id}, function(error, node){
         		if(error) res.status(404).json(error04);
         		else if(node == null) res.status(404).json(error04);
         		else {
@@ -158,6 +174,19 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         			res.status(200).json(node);
         		}
         	})
+        });
+
+        app.get('/api/nodes/:node_id/childNodes',function(req, res){
+            Node.findOne({"name": req.params.node_id}, function(error, node){
+                if(error) res.status(404).json(error04);
+                else if(node == null) res.status(404).json(error04);
+                else {
+                    Node.find({"parent": (node.parent === "/" ? "/" : (node.parent + "/")) + node.name}, (error, childNodes) =>{
+                        res.setHeader("content-type", "application/json");
+                        res.status(200).json(childNodes);
+                    });
+                }
+            });
         });
 
         // route to handle updating goes here (app.put)
@@ -182,10 +211,18 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         });
         // route to handle delete goes here (app.delete)
         app.delete('/api/nodes/:node_id', function(req, res){
-        	Node.remove({_id: req.params.node_id}, function(error, node){
-        		if(error) res.status(4040).json(error04);
-        		res.status(204).json({message:"Deleted"});
-        	});
+            Node.findOne({"name": req.params.node_id}, function(error, node){
+                if(error) res.status(404).json(error04);
+                else if(node == null) res.status(404).json(error04);
+                else {
+                    node.visible = false;
+
+                    node.save(function(error){
+                        if(error) res.send(error);
+                        res.status(200).json(node);
+                    });
+                }
+            });
         });
 
         // frontend routes =========================================================

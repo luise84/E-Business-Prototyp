@@ -15,7 +15,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
         })
         .when('/views/:id', {
             templateUrl: 'views/view-node.html',
-            controller: 'VisController'
+            controller: 'NodeMainController'
         })
 
        

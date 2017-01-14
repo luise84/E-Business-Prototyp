@@ -8,6 +8,7 @@
         "method-override" : "~2.0.2",
         "vis":    "~4.17.0",
         "angular": "~1.6.0",
-       "angular-visjs":"~4.16.0"
+       "angular-visjs":"~4.16.0",
+       "angular-dragdrop": "~1.0.13"
       }
     }
