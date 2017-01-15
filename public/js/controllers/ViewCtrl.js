@@ -9,40 +9,47 @@ angular.module('ViewCtrl', []).controller('ViewController', ['$scope', 'ViewFact
 
     function getViews(){
     	view.getAll().then(function (res){
-    		$scope.views = res.data;
+    		allViews = res.data;
+            _views = [];            
+            for(var i=0; i<allViews.length; i++){
+                
+                if(allViews[i].visible != false)
+                    _views.push(allViews[i]);
+            }
+            $scope.views = _views;
     	}, function (error){
     		$scope.status ='Unable to load view data:' +error.message; });
     	
     }
 
-    $scope.updateView = function(id) {
-    	$location.path('/view-detail/'+id);
+    $scope.updateView = function(name) {
+    	$location.path('/view-detail/'+name);
     }
      $scope.createView = function () {
         $location.path('/view-creation');
     };
 
-    $scope.deleteView = function (id) {
-        view.delete(id)
+   
+
+    $scope.hideView = function (name) {
+        view.delete(name)
         .then(function (response) {
-            $scope.status = 'Deleted View! Refreshing customer list.';
+            $scope.status = 'Hided View! Refreshing customer list.';
             for (var i = 0; i < $scope.views.length; i++) {
                 var _view = $scope.views[i];
-                if (_view.id === id) {
+                if (_view.name === name) {
                     $scope.views.splice(i, 1);
                     break;
                 }
             }
             
         }, function (error) {
-            $scope.status = 'Unable to delete view: ' + error.message;
+            $scope.status = 'Unable to hide view: ' + error.message;
         });
 
     };
-    $scope.showView = function(id){
-       // $location.path('/nodes');
-       //$location.path('/view-node');
-       $location.path('/views/'+ id);
+    $scope.showView = function(name){       
+       $location.path('/views/'+ name);
     }
 
 

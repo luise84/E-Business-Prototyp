@@ -12,6 +12,8 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         // handle things like api calls
         // authentication routes
         /*-------------------------------Views--------------------------------------*/
+        /*Views sind Nodes mit parent==null und content==null*/
+        /* getAll views*/
         app.get('/api/views', function(req, res){
             Node.find({"parent": null}).exec((err, nodes) => {
                 if (err) res.send(err);
@@ -20,6 +22,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                 res.status(200).json(nodes);
             });
         });
+        /*create view*/
         app.post('/api/views', function(req, res){
             if(req.body.name === undefined){  
                     
@@ -39,7 +42,8 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                 res.status(201).json(node);
             });
         }});
-        app.get('/api/views/:view_id', function(req, res){
+        /*wird nicht genutzt*/
+        /*app.get('/api/views/:view_id', function(req, res){
             View.findById(req.params.view_id, function(error, view){
                 if(error) res.status(404).json(error04);
                 else if(view == null) res.status(404).json(error04);
@@ -48,8 +52,9 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                     res.status(200).json(view);
                 }
             })
-        });
-        app.put('/api/views/:view_id', function(req, res){
+        });*/
+        /*wird nicht genutzt*/
+       /* app.put('/api/views/:view_id', function(req, res){
             View.findById(req.params.view_id, function(error, view){
                 if(error) res.send(error04);
                 else{
@@ -65,7 +70,8 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
                     }
                 }
             });
-        });
+        });*/
+        /* kein Löschen, sondern nur ausblenden*/
         app.delete('/api/views/:view_id', function(req, res){
             // Gleiches, wie beim "Löschen" einer Node, da Views == Nodes.
             Node.findOne({"name": req.params.view_id}, function(error, node){
@@ -85,7 +91,8 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 
         /*-------------------------------Nodes--------------------------------------*/
         // sample api route
-        app.get('/api/nodes', function(req, res) {
+        /*wird nicht genutzt, da man immer nur die knoten einer view haben möchte, nie alle*/
+       /* app.get('/api/nodes', function(req, res) {
             // use mongoose to get all nerds in the database
             var query = {};
             if(req.query.name) query.name = new RegExp(req.query.name, 'i'); //i->case-insensitive
@@ -111,9 +118,9 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 	                res.status(200).json(nodes); // return all nerds in JSON format
             	});
             }
-        });
+        });*/
 
-        // route to handle creating goes here (app.post)
+        // Knoten anlegen
         app.post('/api/nodes', function(req, res){
         	if(req.body.name === undefined){	
 					
@@ -166,9 +173,9 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
             node.visible = true;
             return node;
         }
-        // route to handle finding goes here (app.get)
+        /* nur einen Knoten mit unique Namen ausgeben*/
         app.get('/api/nodes/:node_id',function(req, res){
-        	Node.find({"name": req.params.node_id}, function(error, node){
+        	Node.findOne({"name": req.params.node_id}, function(error, node){
         		if(error) res.status(404).json(error04);
         		else if(node == null) res.status(404).json(error04);
         		else {
@@ -177,7 +184,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         		}
         	})
         });
-
+        /*alle Kindknoten ausgeben*/
         app.get('/api/nodes/:node_id/childNodes',function(req, res){
             Node.findOne({"name": req.params.node_id}, function(error, node){
                 if(error) res.status(404).json(error04);
@@ -193,14 +200,15 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 
         // route to handle updating goes here (app.put)
         app.put('/api/nodes/:node_id', function(req, res){
-        	Node.findById(req.params.node_id, function(error, node){
+        	Node.findOne({"name":req.params.node_id}, function(error, node){
         		if(error) res.send(error04);
         		else{
         			if(req.body === undefined) res.status(400).json(error00);
         			else{
-                        if(req.body.name !== undefined) node.name = req.body.name;
+                        //if(req.body.name !== undefined) node.name = req.body.name;
                         if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
+                        console.log(req.body.content)
                         if(req.body.childNodes !== undefined) node.childNodes = req.body.childNodes;
                         
                         node.save(function(error){
@@ -212,6 +220,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
         	});
         });
         // route to handle delete goes here (app.delete)
+        /*no deleting only setting invisible*/
         app.delete('/api/nodes/:node_id', function(req, res){
             Node.findOne({"name": req.params.node_id}, function(error, node){
                 if(error) res.status(404).json(error04);
