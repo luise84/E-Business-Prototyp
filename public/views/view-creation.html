@@ -2,22 +2,18 @@
     <h1>Details der Ansicht</h1>
 
     <form novalidate="novalidate" class="form-horizontal">
-        <div class="control-group">
+         <div class="control-group">
             <label class="control-label" for="inputName">Name:</label>
             <div class="controls">
                 <input type="text" id="inputName" ng-model="view.name"/>
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="inputNodes">Nodes:</label>
-            <div class="controls">
-                <input type="text" id="inputNodes" ng-model="view.nodes"/>
-            </div>
-        </div>
+        
+       
         <div class="control-group">
             <div class="controls">
                 
-                <a ng-click="createNewView(view.name, view.nodes)" class="btn btn-small btn-primary">neue Ansicht erstellen</a>
+                <a ng-click="createNewView(view.name)" class="btn btn-small btn-primary">neue Ansicht erstellen</a>
             </div>
         </div>
     </form>

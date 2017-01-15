@@ -1,35 +1,48 @@
-angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location', function($scope, node, $location) {
+angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location','$routeParams', function($scope, node, $location, $routeParams) {
 
     //$scope.tagline = 'Nothing beats a pocket protector!';
     $scope.pageClass = "page-nodes";
     $scope.status;
     $scope.nodes;
+    $scope.view = $routeParams.id;
 
-    $scope.nodes = getNodes();
+    $scope.nodes = getNodes($scope.view);
+    
+    function getNodes(viewName){
+        if (!viewName) {
+            // Ignoriere das initiale Ausführen des Controllers.
+            return;
+        }
+    	node.getAll(viewName).then(function (res){
+            allNodes = res.data;
+            _nodes = [];
+            for(var i=0; i<allNodes.length; i++){
+                if(allNodes[i].visible != false)
+                    _nodes.push(allNodes[i]);
+            }
 
-    function getNodes(){
-    	node.getAll().then(function (res){
-    		$scope.nodes = res.data;
+    		$scope.nodes = _nodes;
+
     	}, function (error){
     		$scope.status ='Unable to load node data:' +error.message; });
     	
     }
 
-    $scope.updateNode = function(id) {
-    	$location.path('/node-detail/'+id);
+    $scope.updateNode = function(name) {
+    	$location.path('/node-detail/'+name);
     }
      $scope.createNode = function () {
-        $location.path('/node-creation');
+        $location.path('/views/'+$scope.view+'/node-creation');
     };
 
-    $scope.deleteNode = function (id) {
+    $scope.hideNode = function (name) {
 
-        node.delete(id)
+        node.delete(name)
         .then(function (response) {
             $scope.status = 'Deleted Node! Refreshing customer list.';
             for (var i = 0; i < $scope.nodes.length; i++) {
                 var _node = $scope.nodes[i];
-                if (_node.id === id) {
+                if (_node.name === name) {
                     $scope.nodes.splice(i, 1);
                     break;
                 }
@@ -40,11 +53,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         });
 
     };
-    $scope.showNode = function(id){
-        $location.path('/node-detail/'+id);
-       //$location.path('/view-node');
-
-    }
+    
 
 
 

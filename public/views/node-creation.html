@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>Details des Knoten</h1>
+    <h1>Details des neuen Knoten - {{parent.name}}</h1>
 
     <form novalidate="novalidate" class="form-horizontal">
         <div class="control-group">
@@ -15,16 +15,11 @@
                 <input type="text" id="inputContent" ng-model="node.content"/>
             </div>
         </div>
-         <div class="control-group">
-            <label class="control-label" for="inputKeywords">Keywords:</label>
-            <div class="controls">
-                <input type="text" id="inputKeywords" ng-model="node.keywords"/>
-            </div>
-        </div>
+         
         <div class="control-group">
             <div class="controls">
                 
-                <a ng-click="createNewNode(node.name, node.content, node.keywords)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
+                <a ng-click="createNewNode(node.name, node.content)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
             </div>
         </div>
     </form>

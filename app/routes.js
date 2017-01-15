@@ -5,7 +5,7 @@ var View = require('./models/view');
 //REST operations ==============================================================
 var error00 = {type: "error", statusCode: 400, message: "Bad Request"};
 var error04 = {type: "error", statusCode: 404, message: "Requested resource not found"};
-
+var success = (message) => { return {type: "success", statusCode: 200, message: message} };
 
     module.exports = function(app) {
     	// server routes ===========================================================
@@ -37,7 +37,7 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
             });
            
             node.save(function(error){
-                if(error) res.send(error00);
+                if(error) res.send(error00); return;
                 res.setHeader("content-type", "application/json");
                 res.status(201).json(node);
             });
@@ -200,25 +200,75 @@ var error04 = {type: "error", statusCode: 404, message: "Requested resource not 
 
         // route to handle updating goes here (app.put)
         app.put('/api/nodes/:node_id', function(req, res){
-        	Node.findOne({"name":req.params.node_id}, function(error, node){
+            Node.findOne({"name":req.params.node_id}, function(error, node){
         		if(error) res.send(error04);
         		else{
         			if(req.body === undefined) res.status(400).json(error00);
-        			else{
-                        //if(req.body.name !== undefined) node.name = req.body.name;
+        			else {
+                        console.log(node);
+                        if(req.body.name !== undefined) node.name = req.body.name;
                         if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
-                        console.log(req.body.content)
-                        if(req.body.childNodes !== undefined) node.childNodes = req.body.childNodes;
                         
-                        node.save(function(error){
-                            if(error) res.send(error);
-                            res.status(200).json(node);
-                        });
+                        Node.find({"name": { "$in": req.body.childNodes }}, (error, subNodes) => {
+                            if (!error) {
+                                // Nodes wurden erfolgreich gefunden.
+
+                                var initialChildNodes = node.childNodes;
+
+                                node.childNodes = subNodes;
+
+                                // Speichere den geänderten Hauptknoten.
+                                saveNode(node, res, () => {}, 
+                                    () => {
+                                    for (i in initialChildNodes) {
+                                        // Bei den alten Kindknoten die Referenz auf den Parent löschen.
+                                        Node.findOne({"_id": initialChildNodes[i]}, (error, childNode) => {
+                                            if (error) return error;
+                                            childNode.parent.splice(childNode.parent.indexOf(node._id), 1);
+                                            if (childNode.parent.length === 0) childNode.parent = null;
+                                            saveNode(childNode, undefined);
+                                        });
+                                    }
+
+                                    for (i in subNodes) {
+                                        // Für jeden Kindknoten update auch den Parent.
+                                        if (subNodes[i].parent) {
+                                            if (subNodes[i].parent.indexOf(node) != -1) {
+                                                subNodes[i].parent.push(node)
+                                            }
+                                        } else {
+                                            subNodes[i].parent = [node];
+                                        }
+                                        saveNode(subNodes[i], undefined);
+                                    }
+                                });
+                            }
+                        });                        
                     }
         		}
         	});
         });
+
+        function saveNode(node, res, errCallback, sucCallback) {
+            node.save(error => {
+                if (error && errCallback) {
+                    errCallback();
+                }
+                if (error && res) {
+                    // Wenn es einen Fehler gab, und dieser in der Antwort enthalten sein soll.
+                    res.json(error);
+                } else if (res) {
+                    // Es gab keinen Fehler und die Antwort soll an den Client weitergegeben werden.
+                    res.setHeader("content-type", "application/json");
+                    res.status(200).json(node);
+                } 
+                if (!error && sucCallback) {
+                    sucCallback()
+                }
+            });
+        }
+
         // route to handle delete goes here (app.delete)
         /*no deleting only setting invisible*/
         app.delete('/api/nodes/:node_id', function(req, res){

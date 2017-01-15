@@ -7,35 +7,54 @@
 	</div>
 	<div class ="col-md-4 jumbotron">
 		<h3>Details des Knoten</h3>
-		<form class="form-horizontal">
-        
-        <div class="control-group">
-            <label class="control-label" for="inputName">Name:</label>{{currentNode.name}}
-            <div class="controls">
-                <input type="text" id="inputName" ng-model="node.name"/>
+        <div class="row">
+            <div class="col-md-4 jumbotron"> 
+                <h3> Aktuelle Daten: </h3>
+                <div class="list-group">
+                    <li class="list-group-item">Name: {{currentView.name}}</li>
+                <li class="list-group-item">Inhalt: {{currentView.content}}</li>
+                <li class="list-group-item">Kindknoten: {{currentView.childNodes}}</li>
+                <li class="list-group-item">Elternknoten:</li>
+                <li class="list-group-item">Sichtbar: {{currentView.visible}}</li>
+                </div>
             </div>
         </div>
-        
-        <div class="control-group">
-            <label class="control-label" for="inputContent">Inhalt:</label>{{currentNode.content}}
-            <div class="controls">
-                <input type="text" id="inputContent" ng-model="node.content"/>
-            </div>
-        </div>
-         <div class="control-group">
-            <label class="control-label" for="inputKeywords">Keywords:</label>{{currentNode.keywords}}
-            <div class="controls">
-                <input type="text" id="inputKeyword" ng-model="node.keywords"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
+        <div class="row">
+    		<form class="col-md-4 form-horizontal">
+            
+            <div class="control-group">
+                    <label class="control-label" for="inputContent">Neuer Inhalt:</label>
+                    <div class="controls">
+                        <input type="text" id="inputContent" ng-model="view.content"/>
+                    </div>
+                
+                <div class="control-group">
+                    <label class="control-label" for="inputParents">Neue Elternknoten:</label>
+                    <div class="controls">
+                        <input type="text" id="inputParents" ng-model="view.parents"/>
+                    </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputChildNodes">Neue Kindknoten:</label>
+                    <div class="controls">
+                        <input type="text" id="inputChildNodes" ng-model="view.childNodes"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputVisible">Sichtbar:</label>
+                    <div class="controls">
+                        <label>Wenn false, einblenden? Wenn true, ausblenden?</label><input type="checkbox" id="inputVisible" ng-model="view.visible" ng-true-value="true" ng-false-value="false"/>
+                        
+                    </div>
+                </div>
+            <div class="control-group">
+                <div class="controls">
 
-                <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
-                <a ng-click="updateNode(node.name, node.content, node.keywords)" class="btn btn-small btn-primary">Knoten bearbeiten</a>
-                <a ng-click="createNewNode(node.name, node.content, node.keywords)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
+                    <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
+                    <a ng-click="updateNode(node.content, node.parents, node.childNodes, node.visible)" class="btn btn-small btn-primary">Knoten bearbeiten</a>
+                    <a ng-click="createNewNode(node.name, node.content, node.parents, node.childNodes, node.visible)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 	</div>
 </div>

@@ -1,12 +1,12 @@
 <div class="jumbotron text-center">
-    <h1>Knoten der Ansicht</h1>
+    <h1>Knoten der Ansicht - {{view}}</h1>
     <div class="col-md-12">
         <div class="row" ng-repeat="node in nodes">
             <div class="col-md-2 subpanel panel-default">{{node.name}}</div>
             <div class="col-md-8">
-                <div class="btn btn-small btn-primary" ng-click="showNode(node._id)">Details anzeigen</div>
-                <div class="btn btn-small btn-primary" ng-click="updateNode(node._id)">bearbeiten</div>
-                <div class="btn btn-small btn-danger" ng-click="deleteNode(node._id)">löschen</div>
+                
+                <div class="btn btn-small btn-primary" ng-click="updateNode(node.name)">bearbeiten</div>
+                <div class="btn btn-small btn-danger" ng-click="deleteNode(node.name)">ausblenden</div>
                 
             </div>
         </div>

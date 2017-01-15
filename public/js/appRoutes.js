@@ -8,17 +8,15 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             controller: 'MainController'
         })
 
-        // nodes page that will use the NerdController
+        
         .when('/views', {
             templateUrl: 'views/view.html',
             controller: 'ViewController'
         })
         .when('/views/:id', {
-            templateUrl: 'views/view-node.html',
-            controller: 'NodeMainController'
-        })
-
-       
+            templateUrl: 'views/node.html',
+            controller: 'NodeController'
+        })       
         
         .when('/view-creation', {
             templateUrl: 'views/view-creation.html',
@@ -36,18 +34,15 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             templateUrl: 'views/node.html',
             controller: 'NodeController'
         })
-         .when('/node-creation', {
+         .when('/views/:id/node-creation', {
             templateUrl: 'views/node-creation.html',
             controller: 'NodeCreationController'
          })
-         .when('/node-detail/:id', {
+         .when('views/:view_id/node-detail/:id', {
             templateUrl: 'views/node-detail.html',
             controller: 'NodeDetailController'
          })
-         .when('/view-node', {
-            templateUrl: 'views/view-node.html',
-            controller: 'VisController'
-         })
+         
 
         .otherwise({redirectTo: '/nodes'});
     $locationProvider.html5Mode(true);

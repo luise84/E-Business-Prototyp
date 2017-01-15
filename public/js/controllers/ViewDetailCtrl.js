@@ -25,22 +25,27 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     }
     
 	// callback for ng-click 'updateUser':
-    $scope.updateView = function (name, nodes) {
+    $scope.updateView = function (name, content, visible, childNodes) {
         
-        var _view;
+        var _view, currName;
     	for (var i=0; i< $scope.views.length; i++){
     		var currView = $scope.views[i];
     		
-    		if(currView._id === $routeParams.id){
+    		if(currView.name === $routeParams.id){            
     			
     			_view = currView;
-    			if(name != undefined) _view.name = name;
-    			if(nodes != undefined) _view.nodes = nodes;
+                currName = currView.name;
+                   			
+                if(name !== undefined) _view.name = name;
+                if(visible !== undefined) _view.visible = visible;
+                if(content !== undefined) _view.content = content;
+                if(childNodes !== undefined) _view.childNodes.push(childNodes);
+                     console.log(_view)   ;
     			break;
     		}
     	}
-    	
-    	view.update(_view._id, _view).then(function(res){
+
+    	view.update(currName, _view).then(function(res){
     		$scope.status = "Updated View! Refreshing view list.";
 
     	}, function(error){

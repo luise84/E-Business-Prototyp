@@ -4,11 +4,11 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
     var node =  {};
    
         // call to get all nerds
-        node.getAll = function() {
-            return $http.get(baseurl);
+        node.getAll = function(name) {
+            return $http.get(baseurl+"/"+name+"/childNodes");
         };
-        node.getOne = function(id) {
-            return $http.get(baseurl+"/"+  id);
+        node.getOne = function(name) {
+            return $http.get(baseurl+"/"+  name);
         };
 
 

@@ -1,26 +1,51 @@
 <div class="container">
-    <h1>Details der Ansicht</h1>
+    <h1>Details der Ansicht - {{currentView.name}} </h1>
+    <div class="col-md-4 jumbotron"> 
+        <h3> Aktuelle Daten: </h3>
+        <div class="list-group">
+            <li class="list-group-item">Name: {{currentView.name}}</li>
+        <li class="list-group-item">Inhalt: {{currentView.content}}</li>
+        <li class="list-group-item">Kindknoten: {{currentView.childNodes}}</li>
+        <li class="list-group-item">Sichtbar: {{currentView.visible}}</li>
+        </div>
+    </div>
+    <div class="col-md-4 jumbotron">
+        <form novalidate="novalidate" class="form-horizontal">
+            
+            
+             <div class="control-group">
+                <label class="control-label" for="inputName">Neuer Name (muss eindeutig sein):</label>
+                <div class="controls">
+                    <input type="text" id="inputName" ng-model="view.name"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputContent">Neuer Inhalt:</label>
+                <div class="controls">
+                    <input type="text" id="inputContent" ng-model="view.content"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputChildNodes">Neue Kindknoten:</label>
+                <div class="controls">
+                    <input type="text" id="inputChildNodes" ng-model="view.childNodes"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputVisible">Sichtbar:</label>
+                <div class="controls">
+                    <label>Wenn false, einblenden? Wenn true, ausblenden?</label><input type="checkbox" id="inputVisible" ng-model="view.visible" ng-true-value="true" ng-false-value="false"/>
+                    
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
 
-    <form novalidate="novalidate" class="form-horizontal">
-        
-        <div class="control-group">
-            <label class="control-label" for="inputName">Name:</label>{{currentView.name}}
-            <div class="controls">
-                <input type="text" id="inputName" ng-model="view.name"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label" for="inputNodes">Nodes:</label>{{currentView.nodes}}
-            <div class="controls">
-                <input type="text" id="inputNodes" ng-model="view.nodes"/>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
+                    <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
+                    <a ng-click="updateView(view.name, view.content, view.visible,view.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
 
-                <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
-                <a ng-click="updateView(view.name, view.nodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>

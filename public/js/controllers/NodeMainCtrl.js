@@ -17,7 +17,7 @@ angular.module('NodeMainCtrl', []).controller('NodeMainController', ['$scope','$
     }
 
     function getNode(){
-    	node.getOne($routeParams.id).then(function(res){
+    	node.getOne($routeParams.name).then(function(res){
     		$scope.currentNode = res.data;
     	},
     	function(error){
