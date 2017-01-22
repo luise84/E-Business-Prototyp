@@ -5,7 +5,7 @@
         <div class="list-group">
             <li class="list-group-item">Name: {{currentView.name}}</li>
         <li class="list-group-item">Inhalt: {{currentView.content}}</li>
-        <li class="list-group-item">Kindknoten: {{currentView.childNodes}}</li>
+        <li class="list-group-item">Kindknoten: {{childNodes}}</li>
         <li class="list-group-item">Sichtbar: {{currentView.visible}}</li>
         </div>
     </div>
@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label" for="inputChildNodes">Neue Kindknoten:</label>
+                <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
                 <div class="controls">
                     <input type="text" id="inputChildNodes" ng-model="view.childNodes"/>
                 </div>

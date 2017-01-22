@@ -8,8 +8,12 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
             return $http.get(baseurl+"/"+name+"/childNodes");
         };
         node.getOne = function(name) {
-            return $http.get(baseurl+"/"+  name);
+            return $http.get(baseurl+"/"+ name);
         };
+
+        node.getWithID = function(id){
+            return $http.get(baseurl+"/"+id);
+        }
 
 
                 // these will work when more API routes are defined on the Node side of things

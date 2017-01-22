@@ -1,34 +1,52 @@
 <div class="container">
     <h1>Details des Knoten</h1>
 
-    <form novalidate="novalidate" class="form-horizontal">
-        
-        <div class="control-group">
-            <label class="control-label" for="inputName">Name:</label>{{currentNode.name}}
-            <div class="controls">
-                <input type="text" id="inputName" ng-model="node.name"/>
-            </div>
+    <div class="col-md-4 jumbotron"> 
+        <h3> Aktuelle Daten: </h3>
+        <div class="list-group">
+            <li class="list-group-item">Name: {{currentNode.name}}</li>
+        <li class="list-group-item">Inhalt: {{currentNode.content}}</li>
+        <li class="list-group-item">Kindknoten: {{currentNode.childNodes}}</li>
+        <li class="list-group-item">Sichtbar: {{currentNode.visible}}</li>
         </div>
-        
-        <div class="control-group">
-            <label class="control-label" for="inputContent">Inhalt:</label>{{currentNode.content}}
-            <div class="controls">
-                <input type="text" id="inputContent" ng-model="node.content"/>
+    </div>
+    <div class="col-md-4 jumbotron">
+        <form novalidate="novalidate" class="form-horizontal">
+            
+            
+             <div class="control-group">
+                <label class="control-label" for="inputName">Neuer Name (muss eindeutig sein):</label>
+                <div class="controls">
+                    <input type="text" id="inputName" ng-model="node.name"/>
+                </div>
             </div>
-        </div>
-         <div class="control-group">
-            <label class="control-label" for="inputKeywords">Keywords:</label>{{currentNode.keywords}}
-            <div class="controls">
-                <input type="text" id="inputKeyword" ng-model="node.keywords"/>
+            <div class="control-group">
+                <label class="control-label" for="inputContent">Neuer Inhalt:</label>
+                <div class="controls">
+                    <input type="text" id="inputContent" ng-model="node.content"/>
+                </div>
             </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
+            <div class="control-group">
+                <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
+                <div class="controls">
+                    <input type="text" id="inputChildNodes" ng-model="node.childNodes"/>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputVisible">Sichtbar:</label>
+                <div class="controls">
+                    <label>Wenn false, einblenden? Wenn true, ausblenden?</label><input type="checkbox" id="inputVisible" ng-model="node.visible" ng-true-value="true" ng-false-value="false"/>
+                    
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
 
-                <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
-                <a ng-click="updateNode(node.name, node.content, node.keywords)" class="btn btn-small btn-primary">Knoten bearbeiten</a>
-                
+                    <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
+                    <a ng-click="updateView(node.name, node.content, node.visible,node.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>

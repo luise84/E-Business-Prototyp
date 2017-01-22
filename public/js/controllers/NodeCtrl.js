@@ -13,6 +13,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
             // Ignoriere das initiale Ausführen des Controllers.
             return;
         }
+        
     	node.getAll(viewName).then(function (res){
             allNodes = res.data;
             _nodes = [];
@@ -29,7 +30,8 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
     }
 
     $scope.updateNode = function(name) {
-    	$location.path('/node-detail/'+name);
+        console.log("drin");
+    	$location.path('/views/'+$scope.view+'/node-detail/'+name);
     }
      $scope.createNode = function () {
         $location.path('/views/'+$scope.view+'/node-creation');

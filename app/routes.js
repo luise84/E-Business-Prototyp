@@ -184,6 +184,8 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
         		}
         	})
         });
+        
+
         /*alle Kindknoten ausgeben*/
         app.get('/api/nodes/:node_id/childNodes',function(req, res){
             Node.findOne({"name": req.params.node_id}, function(error, node){

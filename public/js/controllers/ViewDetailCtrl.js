@@ -1,14 +1,18 @@
-angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope','$routeParams', 'ViewFactory', '$location', function($scope, $routeParams, view, $location) {
+angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope','$routeParams', 'ViewFactory', 'NodeFactory', '$location', function($scope, $routeParams, view, node, $location) {
 	$scope.status;
     $scope.views;
     $scope.currentView;
 
-    $scope.views = getViews();
+    //$scope.views = getViews();
     $scope.currentView = getView();
+    $scope.childNodes = [];
+
+
 
     function getViews(){
     	view.getAll().then(function (res){
     		$scope.views = res.data;
+            
     	}, function (error){
     		$scope.status ='Unable to load view data:' +error.message; });
     	
@@ -17,15 +21,26 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     function getView(){
     	view.getOne($routeParams.id).then(function(res){
     		$scope.currentView = res.data;
+           //erhalte die namen der kinder
+            node.getAll($routeParams.id).then(function(res){
+                for(var i=0; i<res.data.length; i++){
+                    $scope.childNodes.push(res.data[i].name);
+                }
+            }, function(error){
+                $scope.status = 'Unable to load view data:' +error.message;
+            });
     	},
+
+
     	function(error){
-    		$scope.status = $scope.status ='Unable to load view data:' +error.message; });
+    		$scope.status = 'Unable to load view data:' +error.message; });
     	
     	
     }
     
 	// callback for ng-click 'updateUser':
     $scope.updateView = function (name, content, visible, childNodes) {
+        console.log("childs:"+ childNodes);
         
         var _view, currName;
     	for (var i=0; i< $scope.views.length; i++){
@@ -39,7 +54,9 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
                 if(name !== undefined) _view.name = name;
                 if(visible !== undefined) _view.visible = visible;
                 if(content !== undefined) _view.content = content;
-                if(childNodes !== undefined) _view.childNodes.push(childNodes);
+                if(childNodes !== undefined) 
+                    children = childNodes.split(' | ');
+                    _view.childNodes.push(children);
                      console.log(_view)   ;
     			break;
     		}
@@ -51,7 +68,7 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     	}, function(error){
     		$scope.status = 'Unable to update view: ' + error.message;
     	});
-    	
+    	//@TODO getall childnodes for elem.
         $location.path('/views');
     };
 

@@ -30,21 +30,21 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 
     $routeProvider
 
-         .when('/nodes', {
+        /* .when('/nodes', {
             templateUrl: 'views/node.html',
             controller: 'NodeController'
-        })
+        })*/
          .when('/views/:id/node-creation', {
             templateUrl: 'views/node-creation.html',
             controller: 'NodeCreationController'
          })
-         .when('views/:view_id/node-detail/:id', {
+         .when('/views/:view_id/node-detail/:id', {
             templateUrl: 'views/node-detail.html',
             controller: 'NodeDetailController'
          })
          
 
-        .otherwise({redirectTo: '/nodes'});
+        .otherwise({redirectTo: '/views'});
     $locationProvider.html5Mode(true);
 
 }]);

@@ -1,6 +1,7 @@
 angular.module('NodeCreationCtrl', []).controller('NodeCreationController', ['$scope', 'NodeFactory', '$location', '$routeParams', function($scope, node, $location, $routeParams) {
 // callback for ng-click 'createNewUser':
-    $scope.parent.name = $routeParams.id;
+    $scope.view = $routeParams.id;
+    
 
 
     $scope.createNewNode = function (name, content, childNodes) {
@@ -10,7 +11,7 @@ angular.module('NodeCreationCtrl', []).controller('NodeCreationController', ['$s
             childNodes,
             visible: true, 
             parent: { 
-                name: $scope.parent.name 
+                name: $scope.view 
             }
         };
     	console.log(_node);
@@ -22,7 +23,7 @@ angular.module('NodeCreationCtrl', []).controller('NodeCreationController', ['$s
             $scope.status = 'Unable to insert customer: ' + error.message;
         });
         
-        $location.path('/views/'+$scope.parent.name);
+        $location.path('/views/'+$scope.view);
     }
 
 }]);
