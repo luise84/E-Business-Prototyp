@@ -64,7 +64,7 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
                 break;
             }
         }
-        console.log("aktualisierte daten: "+ _node.childNodes);
+        console.log("neue Kinder: "+ _node.childNodes);
         node.update(currName, _node).then(function(res){
             $scope.status = "Updated View! Refreshing view list.";
 
