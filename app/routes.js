@@ -202,26 +202,26 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
 
         // route to handle updating goes here (app.put)
         app.put('/api/nodes/:node_id', function(req, res){
-            console.log("req.body:" +req.body.content);
+            
             
             Node.findOne({"name":req.params.node_id}, function(error, node){
         		if(error) res.send(error04);
         		else{
         			if(req.body === undefined) res.status(400).json(error00);
         			else {
-                        console.log("node:" +node);
+                        
                         if(req.body.name !== undefined) node.name = req.body.name;
                         if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
                         //suche Nodes, die zukünftige Kinder sein sollen
-                        console.log("Kinderargs: "+req.body.childNodes);
+                        
                         Node.find({"name": { "$in": req.body.childNodes }}, (error, subNodes) => {
                             if (!error) {
                                 // Nodes wurden erfolgreich gefunden.
                                 var initialChildNodes = node.childNodes;//bisherige Kinder
 
                                 node.childNodes = subNodes; //neue Kinder
-                                console.log("neue Kinder:" + subNodes);
+                                
                                 // Speichere den geänderten Hauptknoten.
                                 saveNode(node, res, () => {}, 
                                     () => {
@@ -229,7 +229,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                                         // Bei den alten Kindknoten die Referenz auf den Parent löschen.
                                         Node.findOne({"_id": initialChildNodes[i]}, (error, childNode) => {
                                             if (error) return error;
-                                            console.log("alte Kinder:" +childNode);
+                                            
                                             
                                             if (childNode.parent.length === 0) childNode.parent = null;
                                             childNode.parent.splice(childNode.parent.indexOf(node._id), 1);
@@ -239,21 +239,15 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
 
                                     for (i in subNodes) {
                                         // Für jeden neuen Kindknoten update auch ihre Referenz auf den Parent.
-                                        console.log("Gib die aktuellen Eltern vom neuen Kindknoten:" + subNodes[i].parent);
                                         
                                         if (subNodes[i].parent) {
-                                            console.log("Überprüfe, eltern existieren!");
-                                            console.log("(subNodes[i].parent.indexOf(node._id) != -1):"+(subNodes[i].parent.indexOf(node._id) != -1));
-                                            if (subNodes[i].parent.indexOf(node._id) == -1) {
-                                                console.log("Überprüfe, der neue Vaterknoten ist noch kein Elternteil!");
-                                                subNodes[i].parent.push(node);
-                                                console.log("Akt. Eltern des neuen Kindknoten:" + subNodes[i].parent);
+                                            
+                                            if (subNodes[i].parent.indexOf(node._id) == -1) {                                                
+                                                subNodes[i].parent.push(node);                                                
                                             }
-                                        } else {
-                                            console.log("Überprüfe, eltern existieren NICHT!");
+                                        } else {                                            
                                             subNodes[i].parent = [];
-                                            subNodes[i].parent.push(node);
-                                            console.log("Akt. Eltern des neuen Kindknoten:" + subNodes[i].parent);
+                                            subNodes[i].parent.push(node);                                            
                                         }
                                         saveNode(subNodes[i], undefined);
                                     }
@@ -262,29 +256,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                             }
                             else{ console.log(error);}
                         }); 
-                        /*//suche Eltern die keinen alten Kindknoten haben sollen.
-                        //funktioniert noch nicht
-                        Node.find({"childNodes": {"$in":req.body.childNodes}}, (error, parentNodes) =>{
-                            if(!error) {
-                                //Nodes wurden erfolgreich gefunden.
-                                console.log("Eltern gefunden");
-                                for(i in parentNodes){
-                                    //Für jeden Parentknoten update seine Kindreferenzen
-                                    if(parentNodes[i].childNodes){
-                                        if(parentNodes[i].childNodes.indexOf(req.body.childNodes) != -1){
-                                            parentNodes[i].childNodes.splice(parentNodes[i].childNodes.indexOf(req.body.childNodes), 1);
-                                            
-                                        }
-                                        else {
-                                            parentNodes[i].childNodes = [];
-                                        }
-                                        saveNode(parentNodes[i], undefined);
-                                    }
-                                }
-                            }
-                            console.log("keine Eltern gefunden");
-                            
-                        }); */ 
+                        
 
                                             
                     }
