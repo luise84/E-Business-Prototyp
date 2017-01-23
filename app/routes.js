@@ -214,8 +214,9 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                         if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
                         //suche Nodes, die zukünftige Kinder sein sollen
-                        
-                        Node.find({"name": { "$in": req.body.childNodes }}, (error, subNodes) => {
+                       
+                        Node.find({"name": { "$in": splitElements(req.body.childNodes) }}, (error, subNodes) => {
+                            console.log("subnodes:"+ subNodes);
                             if (!error) {
                                 // Nodes wurden erfolgreich gefunden.
                                 var initialChildNodes = node.childNodes;//bisherige Kinder
@@ -299,6 +300,15 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                 }
             });
         });
+
+
+
+        function splitElements(str){
+            var elementArray = new Array();
+            var string = str+ "";
+            elementArray = string.split("|");
+            return elementArray;
+        }
 
         // frontend routes =========================================================
         // route to handle all angular requests
