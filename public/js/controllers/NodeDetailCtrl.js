@@ -2,12 +2,13 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
 	$scope.status;
     $scope.nodes;
     $scope.currentNode;
+    $scope.childNodes = [];
 
-    $scope.nodes = getNodes($routeParams.id);
-    $scope.currentNode = getNode();
+    $scope.nodes = getNodes($routeParams.view_id);
+    $scope.currentNode = getNode($routeParams.id);
 
-    function getNodes(name){
-        node.getAll(name).then(function (res){
+    function getNodes(viewname){
+        node.getAll(viewname).then(function (res){
             $scope.nodes = res.data;
         }, function (error){
             $scope.status ='Unable to load node data:' +error.message; });
@@ -16,20 +17,33 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
 
     
 
-    function getNode(){
-    	node.getOne($routeParams.id).then(function(res){
+    function getNode(nodename){
+    	node.getOne(nodename).then(function(res){
     		$scope.currentNode = res.data;
-    	},
-    	function(error){
-    		$scope.status = $scope.status ='Unable to load node data:' +error.message; });
+            //erhalte die namen der kinder
+            node.getAll(nodename).then(function(res){
+                for(var i=0; i<res.data.length; i++){
+                    $scope.childNodes.push(res.data[i].name);
+                }
+    	    },
+        	function(error){
+        		$scope.status = $scope.status ='Unable to load node data:' +error.message; 
+            });    	
     	
-    	
+        },
+        function(error){
+            $scope.status = 'Unable to load view data:' +error.message; 
+        });
+        
     }
     
 	// callback for ng-click 'updateUser':
     $scope.updateNode = function (name, content, visible, childNodes) {
+        console.log("childs:"+ childNodes);
         
         var _node, currName;
+     
+
         for (var i=0; i< $scope.nodes.length; i++){
             var currNode = $scope.nodes[i];
             
@@ -37,18 +51,20 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
                 
                 _node = currNode;
                 currName = currNode.name;
-                            
+                   
                 if(name !== undefined) _node.name = name;
                 if(visible !== undefined) _node.visible = visible;
                 if(content !== undefined) _node.content = content;
-                if(childNodes !== undefined) 
-                children = childNodes.split(' | ');
-                    _node.childNodes.push(children);
-                     console.log(_node)   ;
+                if(childNodes !== undefined) {
+                
+                    _node.childNodes.push(childNodes);
+                     
+                 }
+                 
                 break;
             }
         }
-
+        console.log("aktualisierte daten: "+ _node.childNodes);
         node.update(currName, _node).then(function(res){
             $scope.status = "Updated View! Refreshing view list.";
 
@@ -59,6 +75,19 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
         
     	
         $location.path('/nodes');
+    };
+
+     $scope.hideNode = function (name) {
+        view.delete(name)
+        .then(function (response) {
+            $scope.status = 'Hided View! Refreshing customer list.';
+            
+            $location.path('/nodes');
+            
+        }, function (error) {
+            $scope.status = 'Unable to hide view: ' + error.message;
+        });
+
     };
 
     // callback for ng-click 'cancel':

@@ -30,7 +30,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
     }
 
     $scope.updateNode = function(name) {
-        console.log("drin");
+        
     	$location.path('/views/'+$scope.view+'/node-detail/'+name);
     }
      $scope.createNode = function () {

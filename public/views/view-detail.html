@@ -16,28 +16,22 @@
              <div class="control-group">
                 <label class="control-label" for="inputName">Neuer Name (muss eindeutig sein):</label>
                 <div class="controls">
-                    <input type="text" id="inputName" ng-model="view.name"/>
+                    <input type="text" id="inputName" ng-model="view.name" placeholder="{{currentView.name}}"/>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="inputContent">Neuer Inhalt:</label>
                 <div class="controls">
-                    <input type="text" id="inputContent" ng-model="view.content"/>
+                    <input type="text" id="inputContent" ng-model="view.content" placeholder="{{currentView.content}}"/>
                 </div>
             </div>
             <div class="control-group">
                 <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
                 <div class="controls">
-                    <input type="text" id="inputChildNodes" ng-model="view.childNodes"/>
+                    <input type="text" id="inputChildNodes" ng-model="view.childNodes" placeholder="{{childNodes}}"/>
                 </div>
             </div>
-            <div class="control-group">
-                <label class="control-label" for="inputVisible">Sichtbar:</label>
-                <div class="controls">
-                    <label>Wenn false, einblenden? Wenn true, ausblenden?</label><input type="checkbox" id="inputVisible" ng-model="view.visible" ng-true-value="true" ng-false-value="false"/>
-                    
-                </div>
-            </div>
+            <div class="btn btn-small btn-danger" ng-click="hideView(currentView.name)">ausblenden</div>
             <div class="control-group">
                 <div class="controls">
 

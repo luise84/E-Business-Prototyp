@@ -1,10 +1,10 @@
 angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope','$routeParams', 'ViewFactory', 'NodeFactory', '$location', function($scope, $routeParams, view, node, $location) {
 	$scope.status;
-    $scope.views;
+    $scope.views = getViews();
     $scope.currentView;
 
     //$scope.views = getViews();
-    $scope.currentView = getView();
+    $scope.currentView = getView($routeParams.id);
     $scope.childNodes = [];
 
 
@@ -18,11 +18,11 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     	
     }
 
-    function getView(){
-    	view.getOne($routeParams.id).then(function(res){
+    function getView(viewname){
+    	view.getOne(viewname).then(function(res){
     		$scope.currentView = res.data;
            //erhalte die namen der kinder
-            node.getAll($routeParams.id).then(function(res){
+            node.getAll(viewname).then(function(res){
                 for(var i=0; i<res.data.length; i++){
                     $scope.childNodes.push(res.data[i].name);
                 }
@@ -41,7 +41,7 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
 	// callback for ng-click 'updateUser':
     $scope.updateView = function (name, content, visible, childNodes) {
         console.log("childs:"+ childNodes);
-        
+        console.log($scope.views);
         var _view, currName;
     	for (var i=0; i< $scope.views.length; i++){
     		var currView = $scope.views[i];
@@ -55,13 +55,13 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
                 if(visible !== undefined) _view.visible = visible;
                 if(content !== undefined) _view.content = content;
                 if(childNodes !== undefined) 
-                    children = childNodes.split(' | ');
-                    _view.childNodes.push(children);
-                     console.log(_view)   ;
+                    
+                    _view.childNodes.push(childNodes);
+                     console.log(_view);
     			break;
     		}
     	}
-
+        console.log("aktualisierte daten: "+ _view.childNodes);
     	view.update(currName, _view).then(function(res){
     		$scope.status = "Updated View! Refreshing view list.";
 
@@ -70,6 +70,19 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     	});
     	//@TODO getall childnodes for elem.
         $location.path('/views');
+    };
+
+    $scope.hideView = function (name) {
+        view.delete(name)
+        .then(function (response) {
+            $scope.status = 'Hided View! Refreshing customer list.';
+            
+            $location.path('/views');
+            
+        }, function (error) {
+            $scope.status = 'Unable to hide view: ' + error.message;
+        });
+
     };
 
     // callback for ng-click 'cancel':
