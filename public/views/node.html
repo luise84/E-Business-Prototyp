@@ -1,17 +1,38 @@
 <div class="jumbotron text-center">
     <h1>Knoten der Ansicht - {{view}}</h1>
+    
     <div class="col-md-12">
-        <div class="row" ng-repeat="node in nodes">
+        <!--<div class="row" ng-repeat="node in nodes">
             <div class="col-md-2 subpanel panel-default">{{node.name}}</div>
             <div class="col-md-8">
                 
-                <div class="btn btn-small btn-primary" ng-click="updateNode(node.name)">bearbeiten</div>
-                <div class="btn btn-small btn-danger" ng-click="hideNode(node.name)">ausblenden</div>
+                <div class="btn btn-small btn-primary" ng-click="updateNode(node.name, node.content, node.visible)">bearbeiten</div>
+                
                 
             </div>
-        </div>
+        </div>-->
         <div class="btn btn-small btn-primary" ng-click="createNode()">erstellen</div>
     </div>
-    <vis-network data="data" options="options" height="100%"></vis-network>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <vis-network data="data" options="options" height="100%" id="network" events="events" > 
+                   
+
+                </vis-network>
+            </div>
+            <div class="col-md-6">
+               
+                <node-template name="{{nodetemplate}}" view="{{view}}" node="{{updnode}}" content="{{updcontent}}" childnodes="{{updchildnodes}}" visible="{{updvisible}}"></node-template>
+
+            </div>
+        </div>
+    </div>
+    
+    <div ng-show="content">
+        <h2>Inhalt</h2>
+        {{content}}
+    </div>
+    
 
 </div>

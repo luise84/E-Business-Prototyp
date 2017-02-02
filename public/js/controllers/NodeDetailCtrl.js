@@ -3,6 +3,7 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
     $scope.nodes;
     $scope.currentNode;
     $scope.childNodes = [];
+    $scope.pageSubClass = "page-nodes-detail";
 
     $scope.nodes = getNodes($routeParams.view_id);
     $scope.currentNode = getNode($routeParams.id);
@@ -36,10 +37,18 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
         });
         
     }
+
+    function splitElements(elements){
+        var elementArray = new Array();
+        var string = elements+ "";
+        elementArray = string.split("|");
+        return elementArray;
+    }
     
 	// callback for ng-click 'updateUser':
     $scope.updateNode = function (name, content, visible, childNodes) {
         console.log("childs:"+ childNodes);
+        childNodes = splitElements(childNodes);
         
         var _node, currName;
      
@@ -74,7 +83,7 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
         //@TODO getall childnodes for elem.
         
     	
-        $location.path('/nodes');
+        $location.path('/views/'+$routeParams.view_id);
     };
 
      $scope.hideNode = function (name) {
@@ -92,7 +101,7 @@ angular.module('NodeDetailCtrl', []).controller('NodeDetailController', ['$scope
 
     // callback for ng-click 'cancel':
     $scope.cancel = function () {
-        $location.path('/nodes');
+        $location.path('/views');
     };
 
     //$scope.node = node.getOne($routeParams.id);

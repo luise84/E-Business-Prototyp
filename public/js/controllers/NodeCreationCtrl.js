@@ -1,7 +1,7 @@
 angular.module('NodeCreationCtrl', []).controller('NodeCreationController', ['$scope', 'NodeFactory', '$location', '$routeParams', function($scope, node, $location, $routeParams) {
 // callback for ng-click 'createNewUser':
     $scope.view = $routeParams.id;
-    
+    $scope.pageSubClass = "page-nodes-creation";
 
 
     $scope.createNewNode = function (name, content, childNodes) {

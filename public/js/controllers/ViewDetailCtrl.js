@@ -2,6 +2,7 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
 	$scope.status;
     $scope.views = getViews();
     $scope.currentView;
+    $scope.pageSubClass = "page-views-detail";
 
     //$scope.views = getViews();
     $scope.currentView = getView($routeParams.id);

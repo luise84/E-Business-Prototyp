@@ -1,46 +1,50 @@
 <div class="container">
-    <h1>Details des Knoten</h1>
-
-    <div class="col-md-4 jumbotron"> 
-        <h3> Aktuelle Daten: </h3>
-        <div class="list-group">
-            <li class="list-group-item">Name: {{currentNode.name}}</li>
-        <li class="list-group-item">Inhalt: {{currentNode.content}}</li>
-        <li class="list-group-item">Kindknoten: {{childNodes}}</li>
-        <li class="list-group-item">Sichtbar: {{currentNode.visible}}</li>
+    <h3>Details des Knoten</h3>
+   <div class="row">
+        <div class="col-md-12"> 
+            <h4> Aktuelle Daten: </h4>
+            <div class="list-group">
+                <li class="list-group-item">Name: {{node}}</li>
+            <li class="list-group-item">Inhalt: {{content}}</li>
+            <li class="list-group-item">Kindknoten: {{childnodes}}</li>
+            <li class="list-group-item">Sichtbar: {{visible}}</li>
+            </div>
         </div>
     </div>
-    <div class="col-md-4 jumbotron">
-        <form novalidate="novalidate" class="form-horizontal">
-            
-            
-             <div class="control-group">
-                <label class="control-label" for="inputName">Neuer Name (muss eindeutig sein):</label>
-                <div class="controls">
-                    <input type="text" id="inputName" ng-model="node.name" placeholder="{{currentNode.name}}"/>
+    <div class="row">
+        <div class="col-md-12">
+            <form novalidate="novalidate" class="form-horizontal">
+                
+                
+                 <div class="control-group">
+                    <label class="control-label" for="inputName">Neuer Name (muss eindeutig sein):</label>
+                    <div class="controls">
+                        <input type="text" id="inputName" ng-model="updnode.name" placeholder="{{node}}"/>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="inputContent">Neuer Inhalt:</label>
-                <div class="controls">
-                    <input type="text" id="inputContent" ng-model="node.content" placeholder="{{currentNode.content}}"/>
+                <div class="control-group">
+                    <label class="control-label" for="inputContent">Neuer Inhalt:</label>
+                    <div class="controls">
+                        <input type="text" id="inputContent" ng-model="updnode.content" placeholder="{{content}}"/>
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
-                <div class="controls">
-                    <input type="text" id="inputChildNodes" ng-model="node.childNodes" placeholder="{{childNodes}}"/>
+                <div class="control-group">
+                    <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
+                    <div class="controls">
+                        <input type="text" id="inputChildNodes" ng-model="updnode.childNodes" placeholder="{{childnodes}}"/>
+                    </div>
                 </div>
-            </div>
-           <div class="btn btn-small btn-danger" ng-click="deleteNode(currentNode.name)">ausblenden</div>
-            <div class="control-group">
-                <div class="controls">
+               
+                <div class="control-group">
+                    <div class="controls">
 
-                    <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
-                    <a ng-click="updateNode(node.name, node.content, node.visible,node.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+                       
+                        <a ng-click="updateNode(updnode.name, updnode.content, updnode.visible,updnode.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+                        <div class="btn btn-small btn-danger" ng-click="hideNode()">ausblenden</div>
 
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 </div>

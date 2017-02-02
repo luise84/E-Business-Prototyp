@@ -1,26 +1,27 @@
 <div class="container">
-    <h1>Details des neuen Knoten - der Ansicht "{{view}}"</h1>
+    <h3>Details des neuen Knoten der Ansicht "{{view}}"</h3>
 
     <form novalidate="novalidate" class="form-horizontal">
         <div class="control-group">
             <label class="control-label" for="inputName">Name:</label>
             <div class="controls">
-                <input type="text" id="inputName" ng-model="node.name"/>
+                <input type="text" id="inputName" ng-model="newnode.name"/>
             </div>
         </div>
        
         <div class="control-group">
             <label class="control-label" for="inputContent">Inhalt:</label>
             <div class="controls">
-                <input type="text" id="inputContent" ng-model="node.content"/>
+                <input type="text" id="inputContent" ng-model="newnode.content"/>
             </div>
         </div>
          
         <div class="control-group">
             <div class="controls">
                 
-                <a ng-click="createNewNode(node.name, node.content)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
+                <a ng-click="createNewNode(newnode.name, newnode.content)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
             </div>
         </div>
+
     </form>
 </div>

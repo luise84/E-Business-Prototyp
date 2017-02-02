@@ -1,4 +1,6 @@
 angular.module('ViewCreationCtrl', []).controller('ViewCreationController', ['$scope', 'ViewFactory', '$location', function($scope, view, $location) {
+
+ $scope.pageSubClass = "page-views-creation";
 // callback for ng-click 'createNewUser':
         $scope.createNewView = function (name) {
         	var _view = {name};

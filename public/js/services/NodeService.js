@@ -84,6 +84,7 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
                 ];
 
                 var network = null;
+               
 
                 scope.$watch('data', function () {
                     // Sanity check
@@ -104,6 +105,7 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
                     angular.forEach(scope.events, function (callback, event) {
                         if (networkEvents.indexOf(String(event)) >= 0) {
                             network.on(event, callback);
+                             
                         }
                     });
 
@@ -123,3 +125,5 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
             }
         };
     });
+
+ 
