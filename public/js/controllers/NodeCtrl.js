@@ -1,5 +1,5 @@
-angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location','$routeParams', 'VisDataSet','$compile',
-    function($scope, node, $location, $routeParams, VisDataSet, $compile) {
+angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location','$routeParams', 'VisDataSet','$compile', '$window',
+    function($scope, node, $location, $routeParams, VisDataSet, $compile, $window) {
 
     //$scope.tagline = 'Nothing beats a pocket protector!';
     $scope.pageClass = "page-nodes";
@@ -8,7 +8,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
     $scope.view = $routeParams.id;
     $scope.content = "";
     $scope.nodetemplate = "";
-    
+    $scope.activeNode;
     
 
     
@@ -64,13 +64,16 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
     }
 
 
-    $scope.updateNode = function(name, content, visible) {        
+
+
+    $scope.updateNode = function(name, content, url, visible) {        
             $scope.nodetemplate = "node-update";
 
             var children =  getChildrenNames(name);
-            console.log(children);
+            
             $scope.updnode = name;
             $scope.updcontent =  content;
+            $scope.updurl = url;
             $scope.updchildnodes = children;
             $scope.updvisible = visible;
 
@@ -110,16 +113,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
 
     //-------------------------------VisJS---------------------------------------
     
-    $scope.onSelect = function(items) {
-      // debugger;
-      
-
-      console.log('items');
-      
-
-
-    };
-    
+   
      
 
     $scope.onClick = function(props) { 
@@ -139,22 +133,26 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
             }
 
         }
-        $scope.updateNode(result.name, result.content, result.visible);
+        $scope.activeNode = result.url;
+        //if(result.url) openLink(result.url);
+        $scope.updateNode(result.name, result.content, result.url, result.visible);
         
         
         
     };
-
-
-    $scope.onDoubleClick = function(props) {
-      
-      console.log('DoubleClick');
-    };
+   
+    //verbunden mit click-event
+    $scope.doubleClick = function(){
+        if($scope.activeNode){
+            $window.open($scope.activeNode);
+        }
+    }
+    
 
     $scope.rightClick = function(props) {
       
       console.log('rightClick');
-      props.event.preventDefault();
+      //props.event.preventDefault();
     };
     
     $scope.options = {
@@ -162,9 +160,12 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
       height: '800',
       width: '100%',
       manipulation: {
-        enabled: true
+        enabled: false
         
-      }
+      },
+      layout: {
+        hierarchical: true
+        }
 
     };
     
@@ -173,9 +174,8 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         rangechange: $scope.onRangeChange,
         rangechanged: $scope.onRangeChanged,
         onload: $scope.onLoaded,
-        select: $scope.onSelect,
         click: $scope.onClick,
-        doubleClick: $scope.onDoubleClick,
+        doubleClick: $scope.dbclick,
         contextmenu: $scope.rightClick
     };
 
@@ -194,34 +194,71 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         for (i in data){   
             if(data[i].childNodes.length == 0){
                 var shape = '"shape": "square",';
-                var size = '"size": 10,';
-                var color = '"color": "#FF2A00",';
+                var size = '"size": 7,';
+                var color = '"color": "#337ab7",';
+                 var font = '"font": {"color": "black"},';
             }
             else {
                 var shape = '"shape": "circle",';
                 var size = '"size": 5,';
-                var color = '"color": "#93D276",';
+                var color = '"color": "#2e6da4",';
+                var font = '"font": {"color": "white"},';
                 for(j in data[i].childNodes) {
                     
                      edges += '{"from": "'+data[i]._id+'",'+
-                    '"to": "'+data[i].childNodes[j]+'"},'                    
+                    '"to": "'+data[i].childNodes[j]+'","label":'+'"'+genEdgeLabel(data[i]._id, data[i].childNodes[j])+'"'+
+                    ',"font": {"align": "middle"}'+'},'                    
                 }
             }
             if(data[i].visible){
                 jsonNodesMiddle += '{ "id": "' + data[i]._id + '",'+
                 ' "label": "'+data[i].name+'",'+
-                size+color+shape+'"shadow":true},';
+                size+color+shape+font+'"shadow":true},';
             }
         }
         
         var result = jsonNodesStringStart+jsonNodesMiddle+jsonNodesStringEnd+jsonEdgesStart+edges+jsonEdgesEnd;
         result = result.replace(new RegExp(",]"),"]"); // lösche letztes ,
         result = result.replace(new RegExp("},]"),"}]");
-        //console.log(result);
+        console.log(result);
         $scope.data = JSON.parse(result);
 
 
 
+
+
+    }
+
+    function genEdgeLabel(parentId, childId){
+        var label = "";
+        var stNode = "";
+        var ndNode ="";
+        console.log(parentId);
+        console.log(childId);
+        for(n in $scope.nodes){            
+                if($scope.nodes[n]._id === parentId)
+                    stNode = $scope.nodes[n].name;
+                if($scope.nodes[n]._id === childId)
+                    ndNode = $scope.nodes[n].name;
+                     
+                if(stNode && ndNode) {
+                   
+                    var shortStr =  "";
+                    var longStr = "";
+                    if(stNode.length>= ndNode.length){
+                        longStr = stNode;
+                        shortStr = ndNode;
+                    }
+                    else{
+                        shortStr = ndNode;
+                        longStr = stNode;
+                    }            
+                    label = longStr.indexOf(shortStr) != -1 ? shortStr : null;
+                    return label;
+                }
+        }
+
+        
 
     }
     
@@ -240,6 +277,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
             view: '@', 
             modelValue: '=ngModel', //passed as reference
             node: '@',
+            url: '@',
             content: '@',
             childnodes: '@',
             visible: '@'
@@ -268,10 +306,11 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
 
            
            
-            $scope.createNewNode = function (name, content, childNodes) {
+            $scope.createNewNode = function (name, content, url, childNodes) {
                 var _node = {
                     name,
                     content,
+                    url,
                     childNodes,
                     visible: true, 
                     parent: { 
@@ -292,11 +331,11 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
             };
             node.getAll($scope.view).then(function (res){
                         $scope.nodes = res.data;
-                        console.log($scope.nodes);
+                        
                         return;
                     }, function (error){});
 
-            $scope.updateNode = function (name, content, visible, childNodes) {
+            $scope.updateNode = function (name, content, url,visible, childNodes) {
                            
 
                 var _node, currName;
@@ -310,11 +349,16 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
                         currName = currNode.name;
                            
                         if(name !== undefined) _node.name = name;
+                        if(url !== undefined) _node.url = url;
                         if(visible !== undefined) _node.visible = visible;
                         if(content !== undefined) _node.content = content;
                         if(childNodes !== undefined) {
-                        
-                            _node.childNodes.push(childNodes);
+                            console.log("neue Kinder:" + childNodes);
+                            childNodes = childNodes.split("|");
+                            _node.childNodes = [];
+                            for(c in childNodes)  _node.childNodes.push(childNodes[c].trim());
+                            
+                           
                              
                          }
                          

@@ -5,6 +5,7 @@
         <div class="list-group">
             <li class="list-group-item">Name: {{currentView.name}}</li>
         <li class="list-group-item">Inhalt: {{currentView.content}}</li>
+        <li class="list-group-item">Url: {{currentView.url}}</li>
         <li class="list-group-item">Kindknoten: {{childNodes}}</li>
         <li class="list-group-item">Sichtbar: {{currentView.visible}}</li>
         </div>
@@ -26,6 +27,12 @@
                 </div>
             </div>
             <div class="control-group">
+                <label class="control-label" for="inputUrl">Url:</label>
+                <div class="controls">
+                    <input type="text" id="inputUrl" ng-model="view.url" placeholder="{{currentView.url}}"/>
+                </div>
+            </div>
+            <div class="control-group">
                 <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
                 <div class="controls">
                     <input type="text" id="inputChildNodes" ng-model="view.childNodes" placeholder="{{childNodes}}"/>
@@ -36,7 +43,7 @@
                 <div class="controls">
 
                     <a ng-click="cancel()" class="btn btn-small">abbrechen</a>
-                    <a ng-click="updateView(view.name, view.content, view.visible,view.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+                    <a ng-click="updateView(view.name, view.content, view.url, view.visible,view.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
 
                 </div>
             </div>

@@ -7,6 +7,7 @@ var nodeSchema = mongoose.Schema({
 	name: { type: String, required: true, unique: true },
 	content: String,
 	visible: Boolean,
+	url: String,
 	childNodes: [{type: mongoose.Schema.ObjectId, ref: 'Node'}],
 	parent: [{type: mongoose.Schema.ObjectId, ref: 'Node'}]
 });

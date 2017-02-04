@@ -16,14 +16,14 @@
     <div class="col-md-12">
         <div class="row">
             <div class="col-md-6">
-                <vis-network data="data" options="options" height="100%" id="network" events="events" > 
+                <vis-network data="data" options="options" height="100%" id="network" events="events" ng-dblclick="doubleClick()"> 
                    
 
                 </vis-network>
             </div>
             <div class="col-md-6">
                
-                <node-template name="{{nodetemplate}}" view="{{view}}" node="{{updnode}}" content="{{updcontent}}" childnodes="{{updchildnodes}}" visible="{{updvisible}}"></node-template>
+                <node-template name="{{nodetemplate}}" view="{{view}}" node="{{updnode}}" content="{{updcontent}}" childnodes="{{updchildnodes}}" visible="{{updvisible}}" url="{{updurl}}"></node-template>
 
             </div>
         </div>

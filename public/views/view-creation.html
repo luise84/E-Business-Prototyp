@@ -8,12 +8,24 @@
                 <input type="text" id="inputName" ng-model="view.name"/>
             </div>
         </div>
+        <div class="control-group">
+            <label class="control-label" for="inputInhalt">Inhalt:</label>
+            <div class="controls">
+                <input type="text" id="inputInhalt" ng-model="view.content"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputUrl">Url:</label>
+            <div class="controls">
+                <input type="text" id="inputUrl" ng-model="view.url"/>
+            </div>
+        </div>
         
        
         <div class="control-group">
             <div class="controls">
                 
-                <a ng-click="createNewView(view.name)" class="btn btn-small btn-primary">neue Ansicht erstellen</a>
+                <a ng-click="createNewView(view.name, view.content, view.url )" class="btn btn-small btn-primary">neue Ansicht erstellen</a>
             </div>
         </div>
     </form>

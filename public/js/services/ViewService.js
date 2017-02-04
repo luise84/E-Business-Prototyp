@@ -17,6 +17,7 @@ angular.module('ViewService', []).factory('ViewFactory', ['$http', function($htt
                 // these will work when more API routes are defined on the Node side of things
         // call to POST and create a new nerd
         view.create = function(viewData) {
+            console.log(viewData);
             return $http.post(baseurl, viewData);
         };
 

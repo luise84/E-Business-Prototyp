@@ -6,6 +6,7 @@
             <div class="list-group">
                 <li class="list-group-item">Name: {{node}}</li>
             <li class="list-group-item">Inhalt: {{content}}</li>
+            <li class="list-group-item">Url: {{url}}</li>
             <li class="list-group-item">Kindknoten: {{childnodes}}</li>
             <li class="list-group-item">Sichtbar: {{visible}}</li>
             </div>
@@ -29,6 +30,12 @@
                     </div>
                 </div>
                 <div class="control-group">
+                    <label class="control-label" for="inputUrl">URL:</label>
+                    <div class="controls">
+                        <input type="text" id="inputUrl" ng-model="updnode.url" placeholder="{{url}}"/>
+                    </div>
+                </div>
+                <div class="control-group">
                     <label class="control-label" for="inputChildNodes">Neue Kindknoten (trennen mit | ):</label>
                     <div class="controls">
                         <input type="text" id="inputChildNodes" ng-model="updnode.childNodes" placeholder="{{childnodes}}"/>
@@ -39,7 +46,7 @@
                     <div class="controls">
 
                        
-                        <a ng-click="updateNode(updnode.name, updnode.content, updnode.visible,updnode.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
+                        <a ng-click="updateNode(updnode.name, updnode.content, updnode.url, updnode.visible,updnode.childNodes)" class="btn btn-small btn-primary">Ansicht bearbeiten</a>
                         <div class="btn btn-small btn-danger" ng-click="hideNode()">ausblenden</div>
 
                     </div>

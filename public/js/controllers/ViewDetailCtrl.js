@@ -40,7 +40,7 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
     }
     
 	// callback for ng-click 'updateUser':
-    $scope.updateView = function (name, content, visible, childNodes) {
+    $scope.updateView = function (name, content, url, visible, childNodes) {
         console.log("childs:"+ childNodes);
         console.log($scope.views);
         var _view, currName;
@@ -55,6 +55,7 @@ angular.module('ViewDetailCtrl', []).controller('ViewDetailController', ['$scope
                 if(name !== undefined) _view.name = name;
                 if(visible !== undefined) _view.visible = visible;
                 if(content !== undefined) _view.content = content;
+                if(url !== undefined) _view.url = url;
                 if(childNodes !== undefined) 
                     
                     _view.childNodes.push(childNodes);

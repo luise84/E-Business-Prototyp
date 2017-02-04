@@ -15,11 +15,17 @@
                 <input type="text" id="inputContent" ng-model="newnode.content"/>
             </div>
         </div>
+        <div class="control-group">
+            <label class="control-label" for="inputUrl">URL:</label>
+            <div class="controls">
+                <input type="text" id="inputUrl" ng-model="newnode.url"/>
+            </div>
+        </div>
          
         <div class="control-group">
             <div class="controls">
                 
-                <a ng-click="createNewNode(newnode.name, newnode.content)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
+                <a ng-click="createNewNode(newnode.name, newnode.content, newnode.url)" class="btn btn-small btn-primary">neuen Knoten erstellen</a>
             </div>
         </div>
 

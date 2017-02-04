@@ -2,8 +2,11 @@ angular.module('ViewCreationCtrl', []).controller('ViewCreationController', ['$s
 
  $scope.pageSubClass = "page-views-creation";
 // callback for ng-click 'createNewUser':
-        $scope.createNewView = function (name) {
-        	var _view = {name};
+        $scope.createNewView = function (name, content, url) {
+            
+            var _view = {name, content, url};
+            console.log(_view);
+        	
         	view.create(_view)
             .then(function (response) {
                 $scope.status = 'Inserted View! Refreshing customer list.';

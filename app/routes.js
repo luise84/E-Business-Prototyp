@@ -20,26 +20,31 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                 
                 res.setHeader("content-type", "application/json");
                 res.status(200).json(nodes);
+                console.log("Views: Get: Alles ausgegeben!")
             });
         });
         /*create view*/
         app.post('/api/views', function(req, res){
             if(req.body.name === undefined){  
-                    
+                console.log("Views: Post: kein Name gesetzt");
                 res.setHeader("content-type", "application/json");
                 res.status(400).json(error00);
-            
+                
               }
           else{
+            
             var node = createNode({
                 name: req.body.name,
                 parent: undefined
+                
+               
             });
            
             node.save(function(error){
-                if(error) res.send(error00); return;
+                if(error){ res.send(error00); return;}
                 res.setHeader("content-type", "application/json");
                 res.status(201).json(node);
+                console.log("Views: Post: Angelegt!")
             });
         }});
         /*wird nicht genutzt*/
@@ -83,6 +88,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                     node.save(function(error){
                         if(error) res.send(error);
                         res.status(200).json(node);
+                        console.log("Views: Delete: Done!")
                     });
                 }
             });
@@ -126,6 +132,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
 					
     			res.setHeader("content-type", "application/json");
     			res.status(400).json(error00);
+                
 			
         }
             else{
@@ -134,6 +141,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                     // Anlegen der Node in den RAM:
                     node = createNode(req.body);
                     node.parent = element._id;
+
 
                     if (element.length === 0 || error) {
                         console.warn(error);
@@ -161,16 +169,20 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                 });
                 res.setHeader("content-type", "application/json");
                 res.status(201).json(node);
+                console.log("Nodes: Post: Done!")
             }
 		});
 
         function createNode(nodeObject) {
+            console.log(nodeObject);
             var node = new Node();
             node.name = nodeObject.name ;
             node.parent = nodeObject.parent === undefined ? null : nodeObject.parent._id;
             node.content = nodeObject.content || "";
+            node.url = nodeObject.url || "";
             node.childNodes = [];
             node.visible = true;
+            console.log(node);
             return node;
         }
         /* nur einen Knoten mit unique Namen ausgeben*/
@@ -181,6 +193,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
         		else {
         			res.setHeader("content-type", "application/json");
         			res.status(200).json(node);
+                    console.log("Node: Get: Done!")
         		}
         	})
         });
@@ -195,6 +208,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                     Node.find({"parent": node._id}, (error, childNodes) =>{
                         res.setHeader("content-type", "application/json");
                         res.status(200).json(childNodes);
+                        console.log("Nodes: Get: Children: Done!")
                     });
                 }
             });
@@ -213,8 +227,9 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                         if(req.body.name !== undefined) node.name = req.body.name;
                         if(req.body.visible !== undefined) node.visible = req.body.visible;
                         if(req.body.content !== undefined) node.content = req.body.content;
+                        if(req.body.url !== undefined) node.url = req.body.url;
                         //suche Nodes, die zukünftige Kinder sein sollen
-                       
+                       console.log(req.body.childNodes);
                         Node.find({"name": { "$in": req.body.childNodes }}, (error, subNodes) => {
                             console.log("subnodes:"+ subNodes);
                             if (!error) {
@@ -235,6 +250,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                                             if (childNode.parent.length === 0) childNode.parent = null;
                                             childNode.parent.splice(childNode.parent.indexOf(node._id), 1);
                                             saveNode(childNode, undefined);
+                                            console.log("Nodes: Put: alle Kindknoten Done!")
                                         });
                                     }
 
@@ -251,7 +267,9 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                                             subNodes[i].parent.push(node);                                            
                                         }
                                         saveNode(subNodes[i], undefined);
+                                        console.log("Nodes: Put: alle neuen Kindknoten Done!")
                                     }
+                                    console.log("Nodes: Put: Knoten Done!")
 
                                 });
                             }
@@ -296,6 +314,7 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
                     node.save(function(error){
                         if(error) res.send(error);
                         res.status(200).json(node);
+                        console.log("Nodes: Delete: Done!")
                     });
                 }
             });
