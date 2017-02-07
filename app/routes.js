@@ -1,6 +1,8 @@
 // grab the node model we just created
 var Node = require('./models/node');
 var View = require('./models/view');
+var request = require('request');
+var cheerio = require('cheerio');
 
 //REST operations ==============================================================
 var error00 = {type: "error", statusCode: 400, message: "Bad Request"};
@@ -136,42 +138,47 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
 			
         }
             else{
-                var node;
-                Node.findOne({"name": req.body.parent.name }).exec((error, element) => {
-                    // Anlegen der Node in den RAM:
-                    node = createNode(req.body);
-                    node.parent = element._id;
-
-
-                    if (element.length === 0 || error) {
-                        console.warn(error);
-                        return;
-                    }
-                    if (element.childNodes === undefined) {
-                        element.childNodes = [node._id];
-                    } else {
-                        element.childNodes.push(node._id);
-                    }
-                    // Erst die Node speichern.
-                    node.save(err => {
-                        if (err) {
-                            console.warn(err);
-                            return;
-                        }
-                        // Dann den Parent aktualisieren.
-                        element.save(error => {
-                            console.error(error);
-                            if (!error) {
-                                return;
-                            }
-                        });
-                    });
-                });
+                createAndSafeNode(req);
                 res.setHeader("content-type", "application/json");
                 res.status(201).json(node);
                 console.log("Nodes: Post: Done!")
             }
 		});
+
+    function createAndSafeNode(req){
+        var node;
+        Node.findOne({"name": req.body.parent.name }).exec((error, element) => {
+            // Anlegen der Node in den RAM:
+            node = createNode(req.body);
+            node.parent = element._id;
+
+
+            if (element.length === 0 || error) {
+                console.warn(error);
+                return;
+            }
+            if (element.childNodes === undefined) {
+                element.childNodes = [node._id];
+            } else {
+                element.childNodes.push(node._id);
+            }
+            // Erst die Node speichern.
+            node.save(err => {
+                if (err) {
+                    console.warn(err);
+                    return;
+                }
+                // Dann den Parent aktualisieren.
+                element.save(error => {
+                    console.error(error);
+                    if (!error) {
+                        return;
+                    }
+
+                });
+            });
+        });
+    }
 
         function createNode(nodeObject) {
             console.log(nodeObject);
@@ -282,6 +289,69 @@ var success = (message) => { return {type: "success", statusCode: 200, message: 
         		}
         	});
         });
+
+       /* app.post('/api/nodes/webscraping', function(req, res){
+            var result = {parent : [], children: []};
+            var url = req.body.url;
+            var baseurl = "https://de.wikipedia.org";
+            
+
+            request(url, function (error, res, html){
+                if(!error){
+                    // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
+
+                    var $ = cheerio.load(html);
+
+                    // Finally, we'll define the variables we're going to capture
+
+                    var title, content, children;
+                    var json = { name : "", content : "", children : [], url: url};
+
+                    //Heading- starting point
+
+                    $('#firstHeading').filter(function(){
+                        var data = $(this);
+                        title = data.text();
+                        json.name = title;
+                    });
+                    var suburl ="";
+                    var links = $("a").slice(0,40).each(function(i, link){
+                            var childjson = {name: "", content: "", url: "", parent: title};
+                                
+                            suburl = $(link).attr("href");  
+                            subtitle = $(link).attr("title");
+                            if(subtitle){ 
+                                json.children.push(subtitle); 
+                                childjson.name = subtitle;
+                            }        
+                            if(suburl && ! suburl.startsWith("/wiki/Datei:")){                
+                                if(suburl.startsWith("/wiki")){
+                                suburl = baseurl + suburl.replace('/wiki', '');
+                                
+                                childjson.url = suburl;                
+                                }
+                                else return; //only wikipedia internal sites
+                            
+                                
+                            }
+                            if(subtitle && suburl) {
+                                result.children.push(childjson);
+                                //console.log(result.children);
+                            }
+
+                      });  
+
+                }
+                result.parent = json;  
+                req.body = json;
+                createAndSafeNode(json);              
+                return result;
+
+                
+            });
+            
+            //return result;
+        });*/
 
         function saveNode(node, res, errCallback, sucCallback) {
             node.save(error => {

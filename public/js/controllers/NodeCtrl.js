@@ -1,6 +1,7 @@
-angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location','$routeParams', 'VisDataSet','$compile', '$window',
-    function($scope, node, $location, $routeParams, VisDataSet, $compile, $window) {
-
+angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFactory', '$location','$routeParams', 'VisDataSet','$compile', '$window', 
+    function($scope, node, $location, $routeParams, VisDataSet, $compile, $window){
+    //var cheerio = require('cheerio');
+    //var request = require('request');
     //$scope.tagline = 'Nothing beats a pocket protector!';
     $scope.pageClass = "page-nodes";
     $scope.status;
@@ -164,7 +165,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         
       },
       layout: {
-        hierarchical: true
+        hierarchical: false
         }
 
     };
@@ -206,8 +207,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
                 for(j in data[i].childNodes) {
                     
                      edges += '{"from": "'+data[i]._id+'",'+
-                    '"to": "'+data[i].childNodes[j]+'","label":'+'"'+genEdgeLabel(data[i]._id, data[i].childNodes[j])+'"'+
-                    ',"font": {"align": "middle"}'+'},'                    
+                    '"to": "'+data[i].childNodes[j]+ genEdgeLabel(data[i]._id,data[i].childNodes[j])+'},'                    
                 }
             }
             if(data[i].visible){
@@ -220,7 +220,6 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         var result = jsonNodesStringStart+jsonNodesMiddle+jsonNodesStringEnd+jsonEdgesStart+edges+jsonEdgesEnd;
         result = result.replace(new RegExp(",]"),"]"); // lösche letztes ,
         result = result.replace(new RegExp("},]"),"}]");
-        console.log(result);
         $scope.data = JSON.parse(result);
 
 
@@ -233,8 +232,7 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         var label = "";
         var stNode = "";
         var ndNode ="";
-        console.log(parentId);
-        console.log(childId);
+        
         for(n in $scope.nodes){            
                 if($scope.nodes[n]._id === parentId)
                     stNode = $scope.nodes[n].name;
@@ -250,10 +248,12 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
                         shortStr = ndNode;
                     }
                     else{
-                        shortStr = ndNode;
-                        longStr = stNode;
+                        shortStr = stNode;
+                        longStr = ndNode;
                     }            
-                    label = longStr.indexOf(shortStr) != -1 ? shortStr : null;
+                    label = longStr.indexOf(shortStr) != -1 ? shortStr : "";
+                    label = '","label":'+'"'+label+'"'+
+                    ',"font": {"align": "middle"}';
                     return label;
                 }
         }
@@ -261,6 +261,14 @@ angular.module('NodeCtrl', []).controller('NodeController', ['$scope', 'NodeFact
         
 
     }
+
+   $scope.generateNodes = function(){
+        var url = "https://de.wikipedia.org/wiki/"+ $scope.view;
+        node.webscraping({"url": url});
+        
+        
+}
+
     
 
 

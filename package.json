@@ -1,5 +1,7 @@
 {
       "name": "e-business-prototype",
+      "version": "1.0.0",
+      "author": "Luise Napieralski",
       "main": "server.js",
       "dependencies": {
         "express" : "~4.5.1",
@@ -9,8 +11,7 @@
         "vis":    "~4.17.0",
         "angular": "~1.6.0",
        "angular-visjs":"~4.16.0",
-       "angular-dragdrop": "~1.0.13",
-       "mongoose-type-url":"~1.0.2",
-       "normalizeurl": "~1.0.0"
+       "cheerio": "latest",
+       "request": "latest"
       }
     }

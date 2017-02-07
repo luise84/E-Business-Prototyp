@@ -4,6 +4,8 @@ var app = express();
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var mongoose = require('mongoose');
+var request = require('request');
+var cheerio= require('cheerio');
 
 
 
@@ -40,6 +42,9 @@ app.use(express.static(__dirname + '/public'));
 // routes ==================================================
 require('./app/routes')(app); // configure our routes
 
+app.use(request);
+app.use(cheerio);
+
 // start app ===============================================
 // startup our app at http://localhost:8080
 app.listen(port);               
@@ -47,7 +52,59 @@ app.listen(port);
 // shoutout to the user                     
 console.log('Magic happens on port ' + port);
 
-// expose app           
+
+/* ---------------------web scraping--------------------*/
+/*var url = "https://de.wikipedia.org/wiki/Baum";
+var baseurl = "https://de.wikipedia.org";
+var sublinks = [];
+request(url, function (error, res, html){
+	if(!error){
+		// Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
+
+        var $ = cheerio.load(html);
+
+        // Finally, we'll define the variables we're going to capture
+
+        var title, content, childLinks;
+        var json = { title : "", content : "", children : ""};
+
+        //Heading- starting point
+
+       	$('#firstHeading').filter(function(){
+       		var data = $(this);
+       		title = data.text();
+       		json.title = title;
+       	});
+       	var url ="";
+      	var links = $("a").each(function(i, link){
+          	url = $(link).attr("href");  
+          	subtitle = $(link).attr("title");
+          	if(subtitle) json.children += subtitle+",";        	
+          	if(url && ! url.startsWith("/wiki/Datei:")){          		
+      			if(url.startsWith("/wiki")){
+          		url = baseurl + url.replace('/wiki', '');
+          		sublinks.push(url);          		
+	          	}
+	          	else return; //only wikipedia internal sites
+      		
+	          	
+	        }
+
+
+          });
+      	
+          console.log(json);
+      
+         
+
+	}
+})*/
+
+
+
+
+// expose app        
+
 exports = module.exports = app;  
 
 

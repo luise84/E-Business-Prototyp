@@ -28,7 +28,16 @@ angular.module('NodeService', []).factory('NodeFactory', ['$http', function($htt
         node.delete = function(id) {
             return $http.delete(baseurl +"/"+ id);
         };
+
+        node.webscraping = function(url){
+            console.log("webscraping");
+            var result = "";
+            result = $http.post(baseurl + "/webscraping",url);
+            if(result) console.log(result);
+        };
+
         return node;
+
 
 }])
 

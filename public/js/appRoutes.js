@@ -43,6 +43,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
             controller: 'NodeDetailController'
          })
          
+         
 
         .otherwise({redirectTo: '/views'});
     $locationProvider.html5Mode(true);
